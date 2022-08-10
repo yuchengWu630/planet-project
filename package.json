@@ -15,10 +15,11 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.0.0",
-    "stylus": "^0.58.1",
-    "vite": "^2.7.2",
     "autoprefixer": "^10.4.7",
-    "postcss-plugin-px2rem": "^0.8.1"
+    "postcss-plugin-px2rem": "^0.8.1",
+    "stylus": "^0.58.1",
+    "unplugin-vue-components": "^0.22.4",
+    "vite": "^2.7.2"
   },
   "browserslist": [
     "last 2 versions",
