@@ -5,12 +5,16 @@
 </template>
 
 <script setup>
+import { filterDevice } from '@/utils/utils'
+
 const vHorizontalScreen = {
   beforeMount: (el, binding, vnode) => {
     let self = vnode.context;
     function reset(init) {
       let width = document.documentElement.clientWidth,
         height = document.documentElement.clientHeight;
+      // 后续部署线上放开 如果是pc不需要处理
+      // if (filterDevice() === 'pc') return
       //在竖屏状态我们通过添加transform:rotate(90deg)，来让这个页面横过来
       if (
         window.orientation == null ||

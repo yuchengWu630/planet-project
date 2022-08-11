@@ -25,7 +25,7 @@ export const debounce = (func, wait, immediate = false) => {
  */
  export function asyncLoader (url) {
   return new Promise(resolve => {
-    url = `${process.env.BASE_URL}${url}`
+    // url = `${url}`
     let ext = url.slice(url.lastIndexOf('.'))
     const id = url.slice(url.lastIndexOf('/') + 1).replace(/\./g, '_')
     ext = ext.split('?')[0]
@@ -66,4 +66,11 @@ export const debounce = (func, wait, immediate = false) => {
       document.getElementsByTagName('head')[0].appendChild(rs)
     }
   })
+}
+
+export function filterDevice () {
+  const device = navigator.userAgent
+  if (device.indexOf('iPad') > -1) return 'ipad'
+  if (device.indexOf('Android') > -1 || device.indexOf('ios') > -1) return phone
+  return 'pc'
 }

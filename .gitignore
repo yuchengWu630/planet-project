@@ -8,6 +8,7 @@ node_modules
 jsconfig.json
 /config/local.json
 /src/pages/table
+/src/assets/model/planet.glb
 package-lock.json
 origin.vue.config.js
 yarn.lock
