@@ -19,6 +19,16 @@ const scene = new THREE.Scene();
 const dracoLoader = new DRACOLoader();
 const { VITE_MODEL_URL } = import.meta.env
 const loader = new GLTFLoader();
+// 增加点光源
+const pointLight = new THREE.PointLight( 0xff0000, 1, 100 );
+pointLight.position.set( 13, 13, 13 );
+scene.add( pointLight );
+// 点光源辅助线
+const sphereSize = 1;
+const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
+scene.add( pointLightHelper );
+
+
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputEncoding = THREE.sRGBEncoding;
@@ -55,7 +65,7 @@ function initDraw() {
   dracoLoader.setDecoderPath(`${VITE_MODEL_URL}`);
   loader.setDRACOLoader(dracoLoader);
   loader.load(
-    `${VITE_MODEL_URL}planet.glb`,
+    `${VITE_MODEL_URL}cccc.glb`,
     function (gltf) {
       const model = gltf.scene;
       model.scale.set(0.04, 0.04, 0.04);
@@ -72,7 +82,6 @@ function initDraw() {
 
 function animate() {
   controls.update();
-  console.log(1)
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }

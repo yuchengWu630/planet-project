@@ -8,5 +8,11 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus">
+.login
+  font-size 32px
+  display flex
+  justify-content center
+  height 100%
+  align-items center
 </style>

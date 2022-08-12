@@ -13,6 +13,9 @@ export function createRouterGuard(router) {
     next()
   });
   router.afterEach(to => {
+    if (to.meta.title) {
+      document.title = to.meta.title
+    }
     // 结束 loadingBar
     NProgress?.done()
   });

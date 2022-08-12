@@ -9,13 +9,27 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
+    meta: {
+      title: '登录'
+    },
     component: () => import('@/views/login/index.vue')
   },
   {
     path: '/home',
     name: 'Home',
+    meta: {
+      title: '星球'
+    },
     component: () => import('@/views/home/index.vue')
   },
+  {
+    path: '/game',
+    name: 'Game',
+    meta: {
+      title: '展馆'
+    },
+    component: () => import('@/views/game/index.vue')
+  }
 ]
 
 const router = createRouter({
