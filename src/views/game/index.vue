@@ -2,9 +2,21 @@
     <div class="game">game</div>
 </template>
 
-<script>
-export default {
+<script setup>
+import { GameConfigModel, SudFSMMGDecorator, SudFSTAPPDecorator, SudFSMMGListener } from 'sudmgp-sdk-js-wrapper'
+import { SudMGP } from 'sudmgp-sdk-js'
 
+
+export class SDKGameView {
+  constructor(root, gameRoomId, language = 'zh-CN', gameId, userId) {
+    this.gameRoomId = gameRoomId
+    this.root = root
+    this.gameId = gameId
+    this.userId = userId
+    language && (this.language = language)
+  }
+
+  
 }
 </script>
 
