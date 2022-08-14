@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router'
 import { createRouterGuard } from './guard/index'
 
 const routes = [
@@ -34,10 +34,11 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 })
 
 export async function setupRouter(app) {
-  app.use(router);
-  createRouterGuard(router);
+  app.use(router)
+  console.log('router:', router)
+  createRouterGuard(router)
 }

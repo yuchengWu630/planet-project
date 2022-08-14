@@ -1,20 +1,19 @@
 <template>
   <section id="horizontal" v-horizontal-screen>
-    <slot></slot>
+    <div class="container">
+      <slot></slot>
+    </div>
   </section>
 </template>
 
 <script setup>
-import { filterDevice } from '@/utils/utils'
-
+// v-horizontal-screen
 const vHorizontalScreen = {
   beforeMount: (el, binding, vnode) => {
     let self = vnode.context
     function reset(init) {
       let width = document.documentElement.clientWidth,
         height = document.documentElement.clientHeight
-      // 后续部署线上放开 如果是pc不需要处理
-      // if (filterDevice() === 'pc') return
       //在竖屏状态我们通过添加transform:rotate(90deg)，来让这个页面横过来
       if (
         window.orientation == null ||
@@ -53,4 +52,15 @@ const vHorizontalScreen = {
 }
 </script>
 
-<style></style>
+<style>
+#horizontal {
+  background-color: rgb(9, 2, 77);
+}
+/*  .container {
+  width: 100vw;
+  height: 100vh;
+  
+   transform: rotate(-90deg);
+  transform-origin: 333.5px; 
+}*/
+</style>

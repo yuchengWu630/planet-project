@@ -2,7 +2,7 @@
   "name": "009-planet",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -13,6 +13,7 @@
     "sudmgp-sdk-js": "^0.1.8",
     "sudmgp-sdk-js-wrapper": "^0.1.10",
     "three": "^0.143.0",
+    "vant": "^3.5.4",
     "vue": "^3.2.25",
     "vue-router": "^4.1.3"
   },
