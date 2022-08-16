@@ -19,7 +19,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     // 响应拦截
-    return response
+    return response.data
   },
   error => {
     return handleCode(error.response.status, error)

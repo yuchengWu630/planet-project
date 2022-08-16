@@ -74,3 +74,13 @@ export function filterDevice () {
   if (device.indexOf('Android') > -1 || device.indexOf('ios') > -1) return phone
   return 'pc'
 }
+
+
+export const getQueryParam = (key) => {
+  const reg = new RegExp('(^|&)' + key + '=([^&]*)(&|$)', 'i')
+  const r = window.location.search.substr(1).match(reg)
+  if (r != null) {
+    return decodeURI(r[2])
+  }
+  return null
+}

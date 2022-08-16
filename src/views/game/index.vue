@@ -1,16 +1,36 @@
 <template>
-    <div class="game">game</div>
+    <div id="game">game</div>
 </template>
 
 <script setup>
-import { SDKGameView } from '@/utils/sdk'
+import { useGameDetail } from '@/hooks/useGameDetail'
+import { getQueryParam } from '@/utils/utils'
+import useGameHandle from '@/hooks/useGameHandle'
 
-console.log(SDKGameView)
+const orientation = getQueryParam('orientation')
+const roomId = getQueryParam('roomId')
+
+// 返回大厅
+const goBack = (data) => {
+  if (data && data.leaveGame) {
+    // 销毁游戏
+    SudSDk && SudSDk.onDestroy()
+  }
+  setTimeout(() => {
+    location.href = '/home'
+  }, 1000)
+}
+
+const { SudSDk } = useGameDetail('1472142640866779138', roomId || '1472142640866779138', goBack)
+
+const { joinGame, quitGame, readyGame, cancelReadyGame, startGame } = useGameHandle(SudSDk)
+
+// console.log(useGameDetail)
 
 </script>
 
 <style lang="stylus">
-.game
+#game
   font-size 32px
   display flex
   justify-content center

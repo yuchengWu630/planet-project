@@ -65,7 +65,7 @@ function initDraw() {
   dracoLoader.setDecoderPath(`${VITE_MODEL_URL}`);
   loader.setDRACOLoader(dracoLoader);
   loader.load(
-    `${VITE_MODEL_URL}cccc.glb`,
+    `${VITE_MODEL_URL}planet.glb`,
     function (gltf) {
       const model = gltf.scene;
       model.scale.set(0.04, 0.04, 0.04);
