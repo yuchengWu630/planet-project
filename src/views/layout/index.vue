@@ -15,6 +15,7 @@ const vHorizontalScreen = {
       let width = document.documentElement.clientWidth,
         height = document.documentElement.clientHeight
       //在竖屏状态我们通过添加transform:rotate(90deg)，来让这个页面横过来
+      console.log(document.getElementById("app").style.width)
       if (
         window.orientation == null ||
         window.orientation === 180 ||
@@ -24,6 +25,8 @@ const vHorizontalScreen = {
         el.style.webkitTransform = el.style.transform = `rotate(90deg)`
         el.style.width = `${height}px`
         el.style.height = `${width}px`
+        // document.body.style.width = `${height}px`
+        // document.body.style.height = `${width}px`
         el.style.webkitTransformOrigin = el.style.transformOrigin = `${
           width / 2
         }px center`
@@ -33,6 +36,8 @@ const vHorizontalScreen = {
         el.style.webkitTransform = el.style.transform = `rotate(0)`
         el.style.width = `${width}px`
         el.style.height = `${height}px`
+        // document.body.style.width = `${width}px`
+        // document.body.style.height = `${height}px`
       }
     }
     reset(true)
