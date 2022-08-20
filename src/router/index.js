@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { createRouterGuard } from './guard/index'
+import { views } from './views';
 
+
+console.log(views)
 const routes = [
   {
     path: '/',
@@ -12,7 +15,7 @@ const routes = [
     meta: {
       title: '登录'
     },
-    component: () => import('@/views/login/index.vue')
+    component: views['login']
   },
   {
     path: '/home',
@@ -20,7 +23,7 @@ const routes = [
     meta: {
       title: '星球'
     },
-    component: () => import('@/views/home/index.vue')
+    component: views['home']
   },
   {
     path: '/game',
@@ -28,7 +31,7 @@ const routes = [
     meta: {
       title: '展馆'
     },
-    component: () => import('@/views/game/index.vue')
+    component: views['game']
   }
 ]
 
