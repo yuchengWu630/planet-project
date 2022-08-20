@@ -41,7 +41,7 @@
           </van-col>
         </van-row>
       </van-cell-group>
-      <div style="margin: 16px">
+      <div style="margin: 16px; display:flex">
         <van-button
           :loading="loading"
           round
@@ -50,6 +50,14 @@
           native-type="submit"
         >
           登录
+        </van-button>
+        <van-button
+          :loading="loading"
+          round
+          block
+          native-type="submit"
+        >
+          注册
         </van-button>
       </div>
       <div style="margin: 16px">
