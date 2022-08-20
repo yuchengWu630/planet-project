@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <h3 class="login-header">用户登录</h3>
+    <h3 class="login-header">009星通行证</h3>
     <van-form ref="form" @submit="submit">
       <van-cell-group inset>
         <van-field
@@ -10,12 +10,9 @@
           placeholder="手机号"
           :rules="[
             { required: true, message: '请输入手机号' },
-            {
-              pattern: /^1[23456789]\d{9}$/,
-              message: '手机号格式错误',
-            },
+            { pattern: /^1[23456789]\d{9}$/, message: '手机号格式错误' },
           ]"
-          @focus="onFocus"
+          @focus="onFocus('mobile')"
         />
         <van-row style="align-items: center">
           <van-col span="16">
@@ -26,6 +23,7 @@
               label="验证码"
               placeholder="验证码"
               :rules="[{ required: true, message: '请输入验证码' }]"
+              @focus="onFocus('code')"
             />
           </van-col>
           <van-col span="8" style="padding-right: 16px">
@@ -41,25 +39,24 @@
           </van-col>
         </van-row>
       </van-cell-group>
-      <div style="margin: 16px; display:flex">
-        <van-button
-          :loading="loading"
-          round
-          block
-          type="primary"
-          native-type="submit"
-        >
-          登录
-        </van-button>
-        <van-button
-          :loading="loading"
-          round
-          block
-          native-type="submit"
-        >
-          注册
-        </van-button>
-      </div>
+      <van-row :gutter="16" style="margin: 16px; align-items: center">
+        <van-col span="12">
+          <van-button
+            :loading="loading"
+            round
+            block
+            type="primary"
+            native-type="submit"
+          >
+            登录
+          </van-button>
+        </van-col>
+        <van-col span="12">
+          <van-button :loading="loading" round block native-type="submit">
+            注册
+          </van-button>
+        </van-col>
+      </van-row>
       <div style="margin: 16px">
         <van-button round block type="success" @click="toWechatAuth">
           微信授权登录
@@ -68,6 +65,8 @@
     </van-form>
     <!-- 数字键盘 -->
     <van-number-keyboard
+      close-button-text="完成"
+      :title="keyboardTitle"
       v-model:show="showKeybord"
       @input="onInput"
       @blur="showKeybord = false"
@@ -84,6 +83,7 @@ export default {
       disabled: false,
       time: 60,
       showKeybord: false,
+      activeKey: 'mobile',
       formData: {
         mobile: '',
         code: '',
@@ -95,6 +95,9 @@ export default {
       if (!disabled) return '获取验证码'
       return `${time}s后重新获取`
     },
+    keyboardTitle({ activeKey, formData }) {
+      return formData[activeKey]
+    },
   },
   created() {
     const code = this.getWechatCode()
@@ -103,14 +106,15 @@ export default {
   methods: {
     onInput(val) {
       console.log('val:', val)
-      this.formData.mobile += val
+      this.formData[this.activeKey] += val
     },
     onDelete() {
-      this.formData.mobile = this.formData.mobile.slice(0, -1)
+      this.formData[this.activeKey] = this.formData[this.activeKey].slice(0, -1)
     },
-    onFocus() {
+    onFocus(key) {
       document.activeElement.blur()
       this.showKeybord = true
+      this.activeKey = key
     },
     async getCode() {
       try {
@@ -184,13 +188,13 @@ export default {
   flex-direction: column;
 }
 .login-header {
-  height: 108px;
+  height: 64px;
   line-height: 108px;
   color: #fff;
   text-align: center;
   font-size: 20px;
 }
 .van-cell {
-  padding: 48px var(--van-cell-horizontal-padding);
+  padding: 40px var(--van-cell-horizontal-padding);
 }
 </style>
