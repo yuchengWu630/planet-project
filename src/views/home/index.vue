@@ -20,14 +20,47 @@ const dracoLoader = new DRACOLoader();
 const { VITE_MODEL_URL } = import.meta.env
 const loader = new GLTFLoader();
 let camera
-// 增加点光源
-const pointLight = new THREE.PointLight( 0xff0000, 1, 100 );
-pointLight.position.set( 13, 13, 13 );
-scene.add( pointLight );
-// 点光源辅助线
-const sphereSize = 1;
-const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
-scene.add( pointLightHelper );
+let directionLight=new THREE.DirectionalLight(
+    0xffffff, // 光的颜色 默认0xffffff
+    1 // 光照的强度 默认1
+);
+// 平行光的位置
+directionLight.position.set( 15, 40, 35 );
+// 如果设置为 true 该平行光会产生动态阴影。
+directionLight.castShadow = true;
+// 如果非零，那么光强度将会从最大值当前灯光位置处按照距离线性衰减到0。 缺省值为 0.0
+directionLight.distance = 200;
+// 将平行光添加到场景中
+scene.add( directionLight );
+
+// // 用于模拟聚光灯 SpotLight 的锥形辅助对象.
+// lightHelper = new THREE.directionLightHelper( directionLight );
+// // 将模拟聚光灯辅助对象添加到场景中
+// scene.add( lightHelper );
+// // 增加点光源
+// const pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
+// pointLight.position.set( 13, 13, 13 );
+// scene.add( pointLight );
+// // 点光源辅助线
+// const sphereSize = 1;
+// const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
+// scene.add( pointLightHelper );
+
+var material = new THREE.MeshPhongMaterial( { 
+    color: 0xffffff, 
+    dithering: true 
+} );
+var geometry = new THREE.PlaneBufferGeometry( 300, 300 );
+// 创建网格对象 物体 材质
+var mesh = new THREE.Mesh( geometry, material );
+// 设置网格对象的位置
+mesh.position.set( 0, 0, 0 );
+// 沿着X轴旋转
+mesh.rotation.x = - Math.PI * 0.5;
+// 接受阴影
+mesh.receiveShadow = true; 
+// 将网格对象添加到场景中
+scene.add( mesh );
 
 resizeCanvasRatio()
 
@@ -69,7 +102,12 @@ function initDraw() {
   loader.load(
     `${VITE_MODEL_URL}planet.glb`,
     function (gltf) {
+      console.log(gltf)
       const model = gltf.scene;
+      model.castShadow = true
+      model.children.forEach(i => {
+        i.castShadow = true
+      })
       model.scale.set(0.04, 0.04, 0.04);
       scene.add(model);
       renderer.render(scene, camera);
