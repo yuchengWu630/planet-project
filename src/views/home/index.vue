@@ -97,10 +97,10 @@ function initDraw() {
   renderer.outputEncoding = THREE.sRGBEncoding;
   const container = document.getElementById("planetCanvas");
   container.appendChild(renderer.domElement);
-  dracoLoader.setDecoderPath(`${VITE_MODEL_URL}`);
+  dracoLoader.setDecoderPath(`${VITE_MODEL_URL}/libs/`);
   loader.setDRACOLoader(dracoLoader);
   loader.load(
-    `${VITE_MODEL_URL}planet.glb`,
+    `${VITE_MODEL_URL}/libs/planet.glb`,
     function (gltf) {
       console.log(gltf)
       const model = gltf.scene;

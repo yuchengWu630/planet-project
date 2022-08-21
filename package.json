@@ -23,7 +23,8 @@
     "postcss-plugin-px2rem": "^0.8.1",
     "stylus": "^0.58.1",
     "unplugin-vue-components": "^0.22.4",
-    "vite": "^2.7.2"
+    "vite": "^2.9.9",
+    "vite-plugin-compression": "^0.5.1"
   },
   "browserslist": [
     "last 2 versions",
