@@ -10,8 +10,7 @@ jsconfig.json
 /config/local.json
 /src/pages/table
 /public
-planet.glb
-cccc.glb
+public/libs/planet.glb
 package-lock.json
 origin.vue.config.js
 yarn.lock
