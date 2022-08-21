@@ -21,8 +21,8 @@ const { VITE_MODEL_URL } = import.meta.env
 const loader = new GLTFLoader();
 let camera
 let directionLight=new THREE.DirectionalLight(
-    0xffffff, // 光的颜色 默认0xffffff
-    1 // 光照的强度 默认1
+    0xcccccc, // 光的颜色 默认0xffffff
+    .7 // 光照的强度 默认1
 );
 // 平行光的位置
 directionLight.position.set( 15, 40, 35 );
@@ -45,11 +45,18 @@ scene.add( directionLight );
 // const sphereSize = 1;
 // const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
 // scene.add( pointLightHelper );
+// const geometry = new THREE.PlaneGeometry( 2000, 2000 );
+// geometry.rotateX( - Math.PI / 2 );
 
-var material = new THREE.MeshPhongMaterial( { 
-    color: 0xffffff, 
-    dithering: true 
-} );
+// const material = new THREE.ShadowMaterial();
+// material.opacity = 0.2;
+// const plane = new THREE.Mesh( geometry, material );
+// plane.position.y = -200;
+// plane.receiveShadow = true;
+// scene.add( plane );
+
+var material = new THREE.ShadowMaterial();
+material.opacity = 0.4;
 var geometry = new THREE.PlaneBufferGeometry( 300, 300 );
 // 创建网格对象 物体 材质
 var mesh = new THREE.Mesh( geometry, material );
@@ -95,6 +102,7 @@ function initDraw() {
   // document.getElementById('app').style.width = document.documentElement.clientWidth
   // document.getElementById('app').style.height = document.documentElement.clientHeight
   renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.shadowMap.enabled = true
   const container = document.getElementById("planetCanvas");
   container.appendChild(renderer.domElement);
   dracoLoader.setDecoderPath(`${VITE_MODEL_URL}/libs/`);
@@ -105,9 +113,20 @@ function initDraw() {
       console.log(gltf)
       const model = gltf.scene;
       model.castShadow = true
-      model.children.forEach(i => {
-        i.castShadow = true
-      })
+      const deep = (arr) => {
+        if (arr.children) {
+          deep(arr.children)
+        } else {
+          arr.forEach(i => {
+            i.castShadow = true
+          })
+        }
+      }
+      deep(model.children)
+      // model.children.forEach(i => {
+        
+      //   i.castShadow = true
+      // })
       model.scale.set(0.04, 0.04, 0.04);
       scene.add(model);
       renderer.render(scene, camera);
