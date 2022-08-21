@@ -9,7 +9,7 @@ dist.zip
 jsconfig.json
 /config/local.json
 /src/pages/table
-/public
+public
 /public/libs/planet.glb
 /public/libs/cccc.glb
 package-lock.json
