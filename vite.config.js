@@ -5,7 +5,6 @@ import Components from 'unplugin-vue-components/vite'
 import { VantResolver } from 'unplugin-vue-components/resolvers'
 import viteCompression from 'vite-plugin-compression'
 
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -25,7 +24,7 @@ export default defineConfig({
       threshold: 10240,
       algorithm: 'gzip',
       ext: '.gz',
-    })
+    }),
   ],
   resolve: {
     alias: {
@@ -45,14 +44,21 @@ export default defineConfig({
       output: {
         chunkFileNames: 'static/js/[name]-[hash].js',
         entryFileNames: 'static/js/[name]-[hash].js',
-        assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
-      }
-    }
+        assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+      },
+    },
   },
   base: './',
   server: {
     port: 80,
     open: true,
     cors: true,
+    proxy: {
+      '/api': {
+        target: 'http://game.fashionmvs.com/',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, ''),
+      },
+    },
   },
 })

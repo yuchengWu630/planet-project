@@ -1,18 +1,18 @@
 <template>
   <div class="login">
     <h3 class="login-header">009星通行证</h3>
-    <van-form ref="form" @submit="submit">
+    <van-form ref="form">
       <van-cell-group inset>
         <van-field
-          v-model="formData.mobile"
-          name="mobile"
+          v-model="formData.phone"
+          name="phone"
           label="手机号"
           placeholder="手机号"
           :rules="[
             { required: true, message: '请输入手机号' },
             { pattern: /^1[23456789]\d{9}$/, message: '手机号格式错误' },
           ]"
-          @focus="onFocus('mobile')"
+          @focus="onFocus('phone')"
         />
         <van-row style="align-items: center">
           <van-col span="16">
@@ -46,13 +46,13 @@
             round
             block
             type="primary"
-            native-type="submit"
+            @click="submit(1)"
           >
             登录
           </van-button>
         </van-col>
         <van-col span="12">
-          <van-button :loading="loading" round block native-type="submit">
+          <van-button :loading="loading" round block @click="submit(0)">
             注册
           </van-button>
         </van-col>
@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import request from '@/utils/axios'
 export default {
   data() {
     return {
@@ -83,10 +84,11 @@ export default {
       disabled: false,
       time: 60,
       showKeybord: false,
-      activeKey: 'mobile',
+      activeKey: 'phone',
       formData: {
-        mobile: '',
-        code: '',
+        type: 1, // 0-注册；1:登陆
+        phone: '15889738492',
+        code: '0000',
       },
     }
   },
@@ -118,11 +120,21 @@ export default {
     },
     async getCode() {
       try {
-        await this.$refs.form.validate('mobile')
+        await this.$refs.form.validate('phone')
         this.disabled = true
-        await this.mockRequest()
+        await request({
+          url: 'api/bz/user/phone/send',
+          method: 'post',
+          data: {
+            type: 1,
+            phone: this.formData.phone,
+          },
+        })
         this.$notify({ type: 'success', message: '发送成功' })
+        this.countDown()
       } catch (err) {
+        this.disabled = false
+        this.time = 60
         console.error(err)
       }
     },
@@ -137,21 +149,46 @@ export default {
         }
       }, 1000)
     },
-    mockRequest() {
-      return new Promise((resolve, reject) => {
-        setTimeout(resolve, 1000)
+    login(data) {
+      return request({
+        url: 'api/bz/user/phone/login',
+        method: 'post',
+        data,
       })
     },
-    async submit() {
+    register(data) {
+      return request({
+        url: 'api/bz/user/phone/reg',
+        method: 'post',
+        data,
+      })
+    },
+    async submit(type) {
       try {
-        await this.$refs.form.validate(['mobile', 'code'])
+        await this.$refs.form.validate(['phone', 'code'])
         this.loading = true
-        await this.mockRequest()
+        const params = JSON.parse(JSON.stringify(this.formData))
+        params.type = type // 0-注册；1:登陆
+        const res =
+          type === 0 ? await this.register(params) : await this.login(params)
         this.$notify({ type: 'success', message: '登录成功' })
+        this.getUserInfo()
       } catch (err) {
         console.error(err)
       } finally {
         this.loading = false
+      }
+    },
+    async getUserInfo() {
+      try {
+        const res = request({
+          url: 'api/bz/sud/get_user_info',
+          method: 'post',
+          data: {},
+        })
+        console.log('userInfo:', res)
+      } catch (err) {
+        console.error(err)
       }
     },
     // 第一步：1、跳转微信授权，

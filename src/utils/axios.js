@@ -1,9 +1,9 @@
-import Axios from "axios";
-
+import Axios from 'axios'
+import { Notify } from 'vant'
 const axios = Axios.create({
-  baseURL: '/', 
+  baseURL: '/',
   withCredentials: true,
-  timeout: 30000
+  timeout: 30000,
 })
 
 axios.interceptors.request.use(
@@ -19,13 +19,18 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     // 响应拦截
-    return response.data
+    const data = response.data
+    if (data.ok) {
+      return data
+    }
+
+    Notify({ type: 'danger', message: data.msg })
+    return Promise.reject(data)
   },
   error => {
     return handleCode(error.response.status, error)
   }
 )
-
 
 const handleCode = (code, error) => {
   try {
