@@ -57,7 +57,6 @@ export default defineConfig({
       '/api': {
         target: 'http://game.fashionmvs.com/',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, ''),
       },
     },
   },
