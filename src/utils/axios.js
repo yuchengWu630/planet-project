@@ -20,12 +20,11 @@ axios.interceptors.response.use(
   response => {
     // 响应拦截
     const data = response.data
-    if (data.ok) {
-      return data
+    if (data.ok === false && data.msg) {
+      Notify({ type: 'danger', message: data.msg })
+      return Promise.reject(data)
     }
-
-    Notify({ type: 'danger', message: data.msg })
-    return Promise.reject(data)
+    return data
   },
   error => {
     return handleCode(error.response.status, error)

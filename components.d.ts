@@ -10,5 +10,6 @@ declare module '@vue/runtime-core' {
     His: typeof import('./src/components/his/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ValidateForm: typeof import('./src/components/validateForm/index.vue')['default']
   }
 }

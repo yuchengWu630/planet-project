@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import { setupRouter } from './router/index'
 import App from './App.vue'
 import Vant from 'vant'
@@ -8,7 +9,8 @@ import 'vant/lib/index.css'
 
 function setupApp() {
   const app = createApp(App)
-  console.log('app:', app)
+  const pinia = createPinia()
+  app.use(pinia)
   app.use(Vant)
   setDomFontSize()
   setupRouter(app)

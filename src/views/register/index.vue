@@ -7,8 +7,8 @@
       v-model:code="formData.code"
     />
     <p class="tips">
-      没有账号？
-      <router-link to="/register">去注册</router-link>
+      已有账号？
+      <router-link to="/login">去登录</router-link>
     </p>
     <div style="margin: 16px">
       <van-button
@@ -17,7 +17,7 @@
         round
         block
         type="primary"
-        @click="submit"
+        @click="submit(1)"
       >
         登录
       </van-button>
@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import { useUserStore } from '@/store/index.js'
 import request from '@/utils/axios'
 export default {
   data() {
@@ -117,16 +116,16 @@ export default {
         params,
       })
     },
-    async submit() {
+    async submit(type) {
       try {
-        await this.$refs.validateForm.validate()
+        await this.$refs.form.validate(['phone', 'code'])
         this.loading = true
         const params = JSON.parse(JSON.stringify(this.formData))
-        const res = await this.login(params)
+        params.type = type // 0-注册；1:登陆
+        const res =
+          type === 0 ? await this.register(params) : await this.login(params)
         this.$notify({ type: 'success', message: '登录成功' })
-        const userStore = useUserStore()
-        userStore.setUserInfo(res)
-        // this.getUserInfo()
+        this.getUserInfo()
       } catch (err) {
         console.error(err)
       } finally {

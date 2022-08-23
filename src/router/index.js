@@ -1,38 +1,57 @@
-import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
+import {
+  createRouter,
+  createWebHistory,
+  createWebHashHistory,
+} from 'vue-router'
 import { createRouterGuard } from './guard/index'
-import { views } from './views';
-
+import { views } from './views'
 
 console.log(views)
 const routes = [
   {
     path: '/',
-    redirect: '/login'
+    redirect: '/login',
   },
   {
     path: '/login',
     name: 'Login',
     meta: {
-      title: '登录'
+      title: '登录',
     },
-    component: views['login']
+    component: views['login'],
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    meta: {
+      title: '注册',
+    },
+    component: views['register'],
+  },
+  {
+    path: '/bind',
+    name: 'Bind',
+    meta: {
+      title: '手机绑定',
+    },
+    component: views['bind'],
   },
   {
     path: '/home',
     name: 'Home',
     meta: {
-      title: '星球'
+      title: '星球',
     },
-    component: views['home']
+    component: views['home'],
   },
   {
     path: '/game',
     name: 'Game',
     meta: {
-      title: '展馆'
+      title: '展馆',
     },
-    component: views['game']
-  }
+    component: views['game'],
+  },
 ]
 
 const router = createRouter({

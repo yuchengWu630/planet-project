@@ -1,14 +1,14 @@
 <template>
   <div class="login">
-    <h3 class="login-header">009星通行证</h3>
+    <h3 class="login-header">手机绑定</h3>
     <validate-form
       ref="validateForm"
       v-model:phone="formData.phone"
       v-model:code="formData.code"
     />
     <p class="tips">
-      没有账号？
-      <router-link to="/register">去注册</router-link>
+      已有账号？
+      <router-link to="/login">去登录</router-link>
     </p>
     <div style="margin: 16px">
       <van-button
@@ -17,19 +17,15 @@
         round
         block
         type="primary"
-        @click="submit"
+        @click="submit(1)"
       >
-        登录
-      </van-button>
-      <van-button round block type="success" @click="toWechatAuth">
-        微信授权登录
+        绑定
       </van-button>
     </div>
   </div>
 </template>
 
 <script>
-import { useUserStore } from '@/store/index.js'
 import request from '@/utils/axios'
 export default {
   data() {
@@ -41,8 +37,8 @@ export default {
       activeKey: 'phone',
       formData: {
         type: 1, // 0-注册；1:登陆
-        phone: '15889738492',
-        code: '0000',
+        phone: '',
+        code: '',
       },
     }
   },
@@ -117,16 +113,16 @@ export default {
         params,
       })
     },
-    async submit() {
+    async submit(type) {
       try {
-        await this.$refs.validateForm.validate()
+        await this.$refs.form.validate(['phone', 'code'])
         this.loading = true
         const params = JSON.parse(JSON.stringify(this.formData))
-        const res = await this.login(params)
+        params.type = type // 0-注册；1:登陆
+        const res =
+          type === 0 ? await this.register(params) : await this.login(params)
         this.$notify({ type: 'success', message: '登录成功' })
-        const userStore = useUserStore()
-        userStore.setUserInfo(res)
-        // this.getUserInfo()
+        this.getUserInfo()
       } catch (err) {
         console.error(err)
       } finally {
