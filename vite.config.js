@@ -54,7 +54,7 @@ export default defineConfig({
     open: true,
     cors: true,
     proxy: {
-      '/api': {
+      '^(/api|/weixin)': {
         target: 'http://game.fashionmvs.com/',
         changeOrigin: true,
       },

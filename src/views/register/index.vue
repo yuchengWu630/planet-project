@@ -3,6 +3,7 @@
     <h3 class="login-header">009星通行证</h3>
     <validate-form
       ref="validateForm"
+      :type="0"
       v-model:phone="formData.phone"
       v-model:code="formData.code"
     />
@@ -17,9 +18,9 @@
         round
         block
         type="primary"
-        @click="submit(1)"
+        @click="submit"
       >
-        登录
+        注册
       </van-button>
       <van-button round block type="success" @click="toWechatAuth">
         微信授权登录
@@ -34,10 +35,6 @@ export default {
   data() {
     return {
       loading: false,
-      disabled: false,
-      time: 60,
-      showKeybord: false,
-      activeKey: 'phone',
       formData: {
         type: 1, // 0-注册；1:登陆
         phone: '15889738492',
@@ -45,70 +42,11 @@ export default {
       },
     }
   },
-  computed: {
-    codeText({ disabled, time }) {
-      if (!disabled) return '获取验证码'
-      return `${time}s后重新获取`
-    },
-    keyboardTitle({ activeKey, formData }) {
-      return formData[activeKey]
-    },
-  },
   created() {
     // const code = this.getWechatCode()
     // this.getAccessToken(code)
   },
   methods: {
-    onInput(val) {
-      console.log('val:', val)
-      this.formData[this.activeKey] += val
-    },
-    onDelete() {
-      this.formData[this.activeKey] = this.formData[this.activeKey].slice(0, -1)
-    },
-    onFocus(key) {
-      document.activeElement.blur()
-      this.showKeybord = true
-      this.activeKey = key
-    },
-    async getCode() {
-      try {
-        await this.$refs.form.validate('phone')
-        this.disabled = true
-        await request({
-          url: 'api/bz/user/phone/send',
-          method: 'post',
-          params: {
-            type: 1,
-            phone: this.formData.phone,
-          },
-        })
-        this.$notify({ type: 'success', message: '发送成功' })
-        this.countDown()
-      } catch (err) {
-        this.disabled = false
-        this.time = 60
-        console.error(err)
-      }
-    },
-    countDown() {
-      const timer = setInterval(() => {
-        if (this.time > 0) {
-          this.time--
-        } else {
-          clearInterval(timer)
-          this.disabled = false
-          this.time = 60
-        }
-      }, 1000)
-    },
-    login(params) {
-      return request({
-        url: 'api/bz/user/phone/login',
-        method: 'post',
-        params,
-      })
-    },
     register(params) {
       return request({
         url: 'api/bz/user/phone/reg',
@@ -122,8 +60,7 @@ export default {
         this.loading = true
         const params = JSON.parse(JSON.stringify(this.formData))
         params.type = type // 0-注册；1:登陆
-        const res =
-          type === 0 ? await this.register(params) : await this.login(params)
+        const res = await this.register(params)
         this.$notify({ type: 'success', message: '登录成功' })
         this.getUserInfo()
       } catch (err) {

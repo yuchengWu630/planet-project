@@ -10,7 +10,7 @@
           { required: true, message: '请输入手机号' },
           { pattern: /^1[23456789]\d{9}$/, message: '手机号格式错误' },
         ]"
-        @update:modelValue="updatePhone"
+        @update:model-value="updatePhone"
         @focus="onFocus('phone')"
       />
       <van-row style="align-items: center">
@@ -86,10 +86,13 @@ export default {
   },
   methods: {
     onInput(val) {
+      console.log('input')
       const updateVal = this[this.activeKey] + val
+      console.log('updateVal:', val, `update:${this.activeKey}`)
       this.$emit(`update:${this.activeKey}`, updateVal)
     },
     onDelete() {
+      console.log('delete')
       const updateVal = this[this.activeKey].slice(0, -1)
       this.$emit(`update:${this.activeKey}`, updateVal)
     },
@@ -99,6 +102,7 @@ export default {
       this.activeKey = key
     },
     updatePhone(val) {
+      console.log('val:', val)
       this.$emit('update:phone', val)
     },
     updateCode(val) {
