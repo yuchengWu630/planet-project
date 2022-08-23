@@ -110,17 +110,24 @@ function initDraw() {
   loader.load(
     `${VITE_MODEL_URL}/libs/planet.glb`,
     function (gltf) {
-      console.log(gltf)
       const model = gltf.scene;
+      console.log(model)
       model.castShadow = true
       const deep = (arr) => {
-        if (arr.children) {
-          deep(arr.children)
-        } else {
-          arr.forEach(i => {
-            i.castShadow = true
-          })
-        }
+        arr.forEach(i => {
+          // if ([i.name].includes('shadow_'))
+          i.castShadow = true
+          if (i.children.length) {
+            deep(i.children)
+          }
+        })
+        // if (arr.children) {
+        //   deep(arr.children)
+        // } else {
+        //   arr.forEach(i => {
+        //     i.castShadow = true
+        //   })
+        // }
       }
       deep(model.children)
       // model.children.forEach(i => {
