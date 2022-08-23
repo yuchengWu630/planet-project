@@ -12,10 +12,10 @@ export class SDKGameView {
   userId = '100668' // Math.floor((Math.random() + 1) * 10000).toString()
   /** Sud平台申请的appId */
   // eslint-disable-next-line camelcase
-  SudMGP_APP_ID = '1461564080052506636' // "1498868666956988417"
+  SudMGP_APP_ID = '1560457002684354561' // "1498868666956988417"
   /** Sud平台申请的appKey */
   // eslint-disable-next-line camelcase
-  SudMGP_APP_KEY = '03pNxK2lEXsKiiwrBQ9GbH541Fk2Sfnc'// '1461564080052506636' //"E9Lj2Cg61pUgiSESou6WDtxntoTXH7Gf"
+  SudMGP_APP_KEY = 'yr4VIyKAoxTV5FAIYOhR1p3msh8s8TXi'// '1461564080052506636' //"E9Lj2Cg61pUgiSESou6WDtxntoTXH7Gf"
 
   /** true 加载游戏时为测试环境 false 加载游戏时为生产环境 */
   GAME_IS_TEST_ENV = true

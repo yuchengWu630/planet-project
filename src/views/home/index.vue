@@ -10,6 +10,8 @@ import { OrbitControls } from "@/utils/OrbitControls.js";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment";
+import { Water } from 'three/examples/jsm/objects/Water.js';
+import { Sky } from 'three/examples/jsm/objects/Sky.js';
 
 const pointer = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
@@ -19,7 +21,10 @@ const scene = new THREE.Scene();
 const dracoLoader = new DRACOLoader();
 const { VITE_MODEL_URL } = import.meta.env
 const loader = new GLTFLoader();
+const sun = new THREE.Vector3();
 let camera
+
+
 let directionLight=new THREE.DirectionalLight(
     0xcccccc, // 光的颜色 默认0xffffff
     .7 // 光照的强度 默认1
@@ -31,29 +36,7 @@ directionLight.castShadow = true;
 // 如果非零，那么光强度将会从最大值当前灯光位置处按照距离线性衰减到0。 缺省值为 0.0
 directionLight.distance = 200;
 // 将平行光添加到场景中
-scene.add( directionLight );
-
-// // 用于模拟聚光灯 SpotLight 的锥形辅助对象.
-// lightHelper = new THREE.directionLightHelper( directionLight );
-// // 将模拟聚光灯辅助对象添加到场景中
-// scene.add( lightHelper );
-// // 增加点光源
-// const pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
-// pointLight.position.set( 13, 13, 13 );
-// scene.add( pointLight );
-// // 点光源辅助线
-// const sphereSize = 1;
-// const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
-// scene.add( pointLightHelper );
-// const geometry = new THREE.PlaneGeometry( 2000, 2000 );
-// geometry.rotateX( - Math.PI / 2 );
-
-// const material = new THREE.ShadowMaterial();
-// material.opacity = 0.2;
-// const plane = new THREE.Mesh( geometry, material );
-// plane.position.y = -200;
-// plane.receiveShadow = true;
-// scene.add( plane );
+scene.add( directionLight )
 
 var material = new THREE.ShadowMaterial();
 material.opacity = 0.4;
@@ -69,8 +52,64 @@ mesh.receiveShadow = true;
 // 将网格对象添加到场景中
 scene.add( mesh );
 
-resizeCanvasRatio()
+// 水材质
+const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
+const water = new Water(
+  waterGeometry,
+  {
+    textureWidth: 512,
+    textureHeight: 512,
+    waterNormals: new THREE.TextureLoader().load( `${VITE_MODEL_URL}/libs/waternormals.jpg`, function ( texture ) {
 
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+    } ),
+    sunDirection: new THREE.Vector3(),
+    sunColor: 0xffffff,
+    waterColor: 0x001e0f,
+    distortionScale: 3.7,
+    fog: scene.fog !== undefined
+  }
+);
+water.rotation.x = - Math.PI / 2
+water.position.set( 0, 0, 0 )
+scene.add( water )
+
+const sky = new Sky()
+sky.scale.setScalar( 10000 )
+scene.add( sky )
+
+const skyUniforms = sky.material.uniforms
+
+skyUniforms[ 'turbidity' ].value = 10
+skyUniforms[ 'rayleigh' ].value = 2
+skyUniforms[ 'mieCoefficient' ].value = 0.005
+skyUniforms[ 'mieDirectionalG' ].value = 0.8
+
+const parameters = {
+  elevation: 0,
+  azimuth: 250
+}
+
+function updateSun() {
+
+  const phi = THREE.MathUtils.degToRad( 90 - parameters.elevation );
+  const theta = THREE.MathUtils.degToRad( parameters.azimuth );
+
+  sun.setFromSphericalCoords( 1, phi, theta );
+
+  sky.material.uniforms[ 'sunPosition' ].value.copy( sun );
+  water.material.uniforms[ 'sunDirection' ].value.copy( sun ).normalize();
+
+  scene.environment = pmremGenerator.fromScene( sky ).texture;
+
+}
+
+updateSun();
+
+// const pmremGenerator = new THREE.PMREMGenerator( renderer );
+
+resizeCanvasRatio()
 
 renderer.outputEncoding = THREE.sRGBEncoding;
 scene.environment = pmremGenerator.fromScene(
@@ -79,7 +118,6 @@ scene.environment = pmremGenerator.fromScene(
 ).texture;
 camera.position.set(10.6, 2, -0.1);
 const controls = new OrbitControls(camera, renderer.domElement);
-console.log(controls.handleTouchStartRotate)
 // controls.touches = {
 // 	ONE: THREE.TOUCH.ROTATE,
 // 	TWO: THREE.TOUCH.DOLLY_PAN
@@ -121,19 +159,9 @@ function initDraw() {
             deep(i.children)
           }
         })
-        // if (arr.children) {
-        //   deep(arr.children)
-        // } else {
-        //   arr.forEach(i => {
-        //     i.castShadow = true
-        //   })
-        // }
       }
       deep(model.children)
-      // model.children.forEach(i => {
-        
-      //   i.castShadow = true
-      // })
+      model.position.set( 0, .3, 0 )
       model.scale.set(0.04, 0.04, 0.04);
       scene.add(model);
       renderer.render(scene, camera);
@@ -149,6 +177,8 @@ function initDraw() {
 function animate() {
   // controls.update();
   renderer.render(scene, camera);
+  water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
+
   requestAnimationFrame(animate);
 }
 
