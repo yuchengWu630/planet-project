@@ -53,14 +53,12 @@ export default {
     },
     async submit() {
       try {
-        await this.$refs.form.validate(['phone', 'code'])
+        await this.$refs.validateForm.validate()
         this.loading = true
         const params = JSON.parse(JSON.stringify(this.formData))
-        const { data } = await this.register(params)
-        const userStore = useUserStore()
-        userStore.setUserInfo(data)
-        this.$notify({ type: 'success', message: '登录成功' })
-        this.push.push('./game')
+        await this.register(params)
+        this.$notify({ type: 'success', message: '注册成功' })
+        this.$router.push('./login')
       } catch (err) {
         console.error(err)
       } finally {
@@ -104,6 +102,7 @@ export default {
   line-height: 32px;
   color: #fff;
   text-align: right;
+  font-size: 12px;
 }
 .tips a {
   color: var(--van-primary-color);

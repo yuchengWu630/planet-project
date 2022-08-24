@@ -97,6 +97,7 @@ export default {
   line-height: 32px;
   color: #fff;
   text-align: right;
+  font-size: 12px;
 }
 .tips a {
   color: var(--van-primary-color);
