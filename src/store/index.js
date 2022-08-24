@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', {
     phone: '',
     rname: '',
     uname: '',
+    openId: null,
   }),
   actions: {
     setUserInfo(data) {
@@ -19,7 +20,8 @@ export const useUserStore = defineStore('user', {
       this.phone = data.phone || ''
       this.rname = data.rname || ''
       this.uname = data.uname || ''
-      console.log('id:', this.id)
+      this.openId = data.openId || null
+      localStorage.userInfo = JSON.stringify(data)
     },
   },
 })

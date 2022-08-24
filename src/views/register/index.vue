@@ -30,21 +30,18 @@
 </template>
 
 <script>
+import { useUserStore } from '@/store/index.js'
 import request from '@/utils/axios'
 export default {
   data() {
     return {
       loading: false,
       formData: {
-        type: 1, // 0-注册；1:登陆
-        phone: '15889738492',
-        code: '0000',
+        type: 0, // 0-注册；1:登陆
+        phone: '',
+        code: '',
       },
     }
-  },
-  created() {
-    // const code = this.getWechatCode()
-    // this.getAccessToken(code)
   },
   methods: {
     register(params) {
@@ -54,56 +51,36 @@ export default {
         params,
       })
     },
-    async submit(type) {
+    async submit() {
       try {
         await this.$refs.form.validate(['phone', 'code'])
         this.loading = true
         const params = JSON.parse(JSON.stringify(this.formData))
-        params.type = type // 0-注册；1:登陆
-        const res = await this.register(params)
+        const { data } = await this.register(params)
+        const userStore = useUserStore()
+        userStore.setUserInfo(data)
         this.$notify({ type: 'success', message: '登录成功' })
-        this.getUserInfo()
+        this.push.push('./game')
       } catch (err) {
         console.error(err)
       } finally {
         this.loading = false
       }
     },
-    async getUserInfo() {
+    getAuthorizeUrl() {
+      return request({
+        url: 'weixin/mp/authorize',
+        method: 'get',
+      })
+    },
+    // 第一步：1、跳转微信授权，
+    async toWechatAuth() {
       try {
-        const res = request({
-          url: 'api/bz/sud/get_user_info',
-          method: 'post',
-          data: {},
-        })
-        console.log('userInfo:', res)
+        const { data } = await this.getAuthorizeUrl()
+        window.location.href = data
       } catch (err) {
         console.error(err)
       }
-    },
-    // 第一步：1、跳转微信授权，
-    toWechatAuth() {
-      const APP_ID = 'wxa7da15529eb0d0e7'
-      const REDIRECT_URI = 'http://192.168.2.5/login'
-      const SCOPE = 'snsapi_userinfo'
-      const STATE = '10086'
-      window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${APP_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${SCOPE}&state=${STATE}#wechat_redirect`
-    },
-    // 第一步：2、用户同意授权，获取code
-    getWechatCode() {
-      const params = new URLSearchParams(window.location.search)
-      return params.get('code')
-    },
-    // 第二步：通过 code 换取网页授权access_token
-    getAccessToken(code) {
-      const APP_ID = 'wxa7da15529eb0d0e7'
-      const SECRET = '7f5236c68c2d9e7c4cc9ce92c9df2e96'
-      fetch(`http://192.168.2.5:8080/auth/accessToken?code=${code}`)
-        .then(res => res.json())
-        .then(data => {
-          console.log('data:', data)
-        })
-        .catch(err => console.log('Request Failed', err))
     },
   },
 }

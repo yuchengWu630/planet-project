@@ -36,15 +36,17 @@ export default {
     return {
       loading: false,
       formData: {
-        type: 1, // 0-注册；1:登陆
+        type: 1,
         phone: '',
         code: '',
       },
     }
   },
   created() {
-    // const code = this.getWechatCode()
-    // this.getAccessToken(code)
+    const code = this.getWechatCode()
+    if (code) {
+      this.getUserInfoByWechat(code)
+    }
   },
   methods: {
     login(params) {
@@ -59,27 +61,15 @@ export default {
         await this.$refs.validateForm.validate()
         this.loading = true
         const params = JSON.parse(JSON.stringify(this.formData))
-        const res = await this.login(params)
+        const { data } = await this.login(params)
         this.$notify({ type: 'success', message: '登录成功' })
         const userStore = useUserStore()
-        userStore.setUserInfo(res)
-        // this.getUserInfo()
+        userStore.setUserInfo(data)
+        this.$router.push('./game')
       } catch (err) {
         console.error(err)
       } finally {
         this.loading = false
-      }
-    },
-    async getUserInfo() {
-      try {
-        const res = request({
-          url: 'api/bz/sud/get_user_info',
-          method: 'post',
-          data: {},
-        })
-        console.log('userInfo:', res)
-      } catch (err) {
-        console.error(err)
       }
     },
     getAuthorizeUrl() {
@@ -91,14 +81,8 @@ export default {
     // 第一步：1、跳转微信授权，
     async toWechatAuth() {
       try {
-        const url = await this.getAuthorizeUrl()
-        console.log('url:', url)
-        const url2 = decodeURIComponent(url).replace(
-          'http://game.fashionmvs.com',
-          encodeURIComponent('http://xp.test.com')
-        )
-        console.log('url2:', url2)
-        window.location.href = url2
+        const { data } = await this.getAuthorizeUrl()
+        window.location.href = data
       } catch (err) {
         console.error(err)
       }
@@ -108,16 +92,26 @@ export default {
       const params = new URLSearchParams(window.location.search)
       return params.get('code')
     },
-    // 第二步：通过 code 换取网页授权access_token
-    getAccessToken(code) {
-      const APP_ID = 'wxa7da15529eb0d0e7'
-      const SECRET = '7f5236c68c2d9e7c4cc9ce92c9df2e96'
-      fetch(`http://192.168.2.5:8080/auth/accessToken?code=${code}`)
-        .then(res => res.json())
-        .then(data => {
-          console.log('data:', data)
+    // 第二步：通过 code 获取用户信息
+    async getUserInfoByWechat(code) {
+      try {
+        const { data } = await request({
+          url: 'weixin/mp/userInfo',
+          method: 'post',
+          params: { code },
         })
-        .catch(err => console.log('Request Failed', err))
+        const userStore = useUserStore()
+        userStore.setUserInfo(data)
+        if (!data.phone) {
+          await this.$dialog.alert({
+            message: '您还未绑定手机号，立即绑定',
+          })
+          this.$router.push('./bind')
+          return
+        }
+      } catch (err) {
+        console.error(err)
+      }
     },
   },
 }

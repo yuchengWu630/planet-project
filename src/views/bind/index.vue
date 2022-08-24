@@ -3,6 +3,7 @@
     <h3 class="login-header">手机绑定</h3>
     <validate-form
       ref="validateForm"
+      :type="2"
       v-model:phone="formData.phone"
       v-model:code="formData.code"
     />
@@ -26,144 +27,53 @@
 </template>
 
 <script>
+import { useUserStore } from '@/store/index.js'
 import request from '@/utils/axios'
 export default {
   data() {
     return {
       loading: false,
-      disabled: false,
-      time: 60,
-      showKeybord: false,
-      activeKey: 'phone',
       formData: {
-        type: 1, // 0-注册；1:登陆
+        type: 2,
         phone: '',
         code: '',
+        openId: null,
       },
     }
   },
-  computed: {
-    codeText({ disabled, time }) {
-      if (!disabled) return '获取验证码'
-      return `${time}s后重新获取`
-    },
-    keyboardTitle({ activeKey, formData }) {
-      return formData[activeKey]
-    },
-  },
   created() {
-    // const code = this.getWechatCode()
-    // this.getAccessToken(code)
+    const userStore = useUserStore()
+    if (!userStore.openId) {
+      this.$dialog.alert({ message: '微信未授权，请先授权' }).then(() => {
+        this.$router.push('./login')
+      })
+      return
+    }
+    this.formData.openId = userStore.openId
   },
   methods: {
-    onInput(val) {
-      console.log('val:', val)
-      this.formData[this.activeKey] += val
-    },
-    onDelete() {
-      this.formData[this.activeKey] = this.formData[this.activeKey].slice(0, -1)
-    },
-    onFocus(key) {
-      document.activeElement.blur()
-      this.showKeybord = true
-      this.activeKey = key
-    },
-    async getCode() {
-      try {
-        await this.$refs.form.validate('phone')
-        this.disabled = true
-        await request({
-          url: 'api/bz/user/phone/send',
-          method: 'post',
-          params: {
-            type: 1,
-            phone: this.formData.phone,
-          },
-        })
-        this.$notify({ type: 'success', message: '发送成功' })
-        this.countDown()
-      } catch (err) {
-        this.disabled = false
-        this.time = 60
-        console.error(err)
-      }
-    },
-    countDown() {
-      const timer = setInterval(() => {
-        if (this.time > 0) {
-          this.time--
-        } else {
-          clearInterval(timer)
-          this.disabled = false
-          this.time = 60
-        }
-      }, 1000)
-    },
-    login(params) {
+    bind(params) {
       return request({
-        url: 'api/bz/user/phone/login',
+        url: 'api/bz/user/phone/bind',
         method: 'post',
         params,
       })
     },
-    register(params) {
-      return request({
-        url: 'api/bz/user/phone/reg',
-        method: 'post',
-        params,
-      })
-    },
-    async submit(type) {
+    async submit() {
       try {
-        await this.$refs.form.validate(['phone', 'code'])
+        await this.$refs.validateForm.validate()
         this.loading = true
         const params = JSON.parse(JSON.stringify(this.formData))
-        params.type = type // 0-注册；1:登陆
-        const res =
-          type === 0 ? await this.register(params) : await this.login(params)
-        this.$notify({ type: 'success', message: '登录成功' })
-        this.getUserInfo()
+        const { data } = this.bind(params)
+        const userStore = useUserStore()
+        userStore.setUserInfo(data)
+        this.$notify({ type: 'success', message: '绑定成功' })
+        this.$router.push('./game')
       } catch (err) {
         console.error(err)
       } finally {
         this.loading = false
       }
-    },
-    async getUserInfo() {
-      try {
-        const res = request({
-          url: 'api/bz/sud/get_user_info',
-          method: 'post',
-          data: {},
-        })
-        console.log('userInfo:', res)
-      } catch (err) {
-        console.error(err)
-      }
-    },
-    // 第一步：1、跳转微信授权，
-    toWechatAuth() {
-      const APP_ID = 'wxa7da15529eb0d0e7'
-      const REDIRECT_URI = 'http://192.168.2.5/login'
-      const SCOPE = 'snsapi_userinfo'
-      const STATE = '10086'
-      window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${APP_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${SCOPE}&state=${STATE}#wechat_redirect`
-    },
-    // 第一步：2、用户同意授权，获取code
-    getWechatCode() {
-      const params = new URLSearchParams(window.location.search)
-      return params.get('code')
-    },
-    // 第二步：通过 code 换取网页授权access_token
-    getAccessToken(code) {
-      const APP_ID = 'wxa7da15529eb0d0e7'
-      const SECRET = '7f5236c68c2d9e7c4cc9ce92c9df2e96'
-      fetch(`http://192.168.2.5:8080/auth/accessToken?code=${code}`)
-        .then(res => res.json())
-        .then(data => {
-          console.log('data:', data)
-        })
-        .catch(err => console.log('Request Failed', err))
     },
   },
 }

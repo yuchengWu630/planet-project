@@ -54,6 +54,7 @@
 import request from '@/utils/axios'
 export default {
   props: {
+    // 0-注册；1:登陆；2-手机绑定
     type: {
       type: Number,
       default: 1,
@@ -86,9 +87,7 @@ export default {
   },
   methods: {
     onInput(val) {
-      console.log('input')
       const updateVal = this[this.activeKey] + val
-      console.log('updateVal:', val, `update:${this.activeKey}`)
       this.$emit(`update:${this.activeKey}`, updateVal)
     },
     onDelete() {
@@ -102,7 +101,6 @@ export default {
       this.activeKey = key
     },
     updatePhone(val) {
-      console.log('val:', val)
       this.$emit('update:phone', val)
     },
     updateCode(val) {

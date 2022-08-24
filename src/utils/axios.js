@@ -5,10 +5,19 @@ const axios = Axios.create({
   withCredentials: true,
   timeout: 30000,
 })
-
 axios.interceptors.request.use(
   config => {
     // 请求拦截
+    const userInfo = localStorage.userInfo
+      ? JSON.parse(localStorage.userInfo)
+      : {}
+    console.log(localStorage.userInfo)
+    if (userInfo.key) {
+      config.headers = {
+        token: userInfo.key,
+      }
+    }
+    console.log('key:', userInfo.key)
     return config
   },
   error => {
