@@ -53,59 +53,59 @@ mesh.receiveShadow = true;
 scene.add( mesh );
 
 // 水材质
-const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
-const water = new Water(
-  waterGeometry,
-  {
-    textureWidth: 512,
-    textureHeight: 512,
-    waterNormals: new THREE.TextureLoader().load( `${VITE_MODEL_URL}/libs/waternormals.jpg`, function ( texture ) {
+// const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
+// const water = new Water(
+//   waterGeometry,
+//   {
+//     textureWidth: 512,
+//     textureHeight: 512,
+//     waterNormals: new THREE.TextureLoader().load( `${VITE_MODEL_URL}/libs/waternormals.jpg`, function ( texture ) {
 
-      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+//       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
-    } ),
-    sunDirection: new THREE.Vector3(),
-    sunColor: 0xffffff,
-    waterColor: 0x001e0f,
-    distortionScale: 3.7,
-    fog: scene.fog !== undefined
-  }
-);
-water.rotation.x = - Math.PI / 2
-water.position.set( 0, 0, 0 )
-scene.add( water )
+//     } ),
+//     sunDirection: new THREE.Vector3(),
+//     sunColor: 0xffffff,
+//     waterColor: 0x001e0f,
+//     distortionScale: 3.7,
+//     fog: scene.fog !== undefined
+//   }
+// );
+// water.rotation.x = - Math.PI / 2
+// water.position.set( 0, 0, 0 )
+// scene.add( water )
 
-const sky = new Sky()
-sky.scale.setScalar( 10000 )
-scene.add( sky )
+// const sky = new Sky()
+// sky.scale.setScalar( 10000 )
+// scene.add( sky )
 
-const skyUniforms = sky.material.uniforms
+// const skyUniforms = sky.material.uniforms
 
-skyUniforms[ 'turbidity' ].value = 10
-skyUniforms[ 'rayleigh' ].value = 2
-skyUniforms[ 'mieCoefficient' ].value = 0.005
-skyUniforms[ 'mieDirectionalG' ].value = 0.8
+// skyUniforms[ 'turbidity' ].value = 10
+// skyUniforms[ 'rayleigh' ].value = 2
+// skyUniforms[ 'mieCoefficient' ].value = 0.005
+// skyUniforms[ 'mieDirectionalG' ].value = 0.8
 
-const parameters = {
-  elevation: 0,
-  azimuth: 250
-}
+// const parameters = {
+//   elevation: 0,
+//   azimuth: 250
+// }
 
-function updateSun() {
+// function updateSun() {
 
-  const phi = THREE.MathUtils.degToRad( 90 - parameters.elevation );
-  const theta = THREE.MathUtils.degToRad( parameters.azimuth );
+//   const phi = THREE.MathUtils.degToRad( 90 - parameters.elevation );
+//   const theta = THREE.MathUtils.degToRad( parameters.azimuth );
 
-  sun.setFromSphericalCoords( 1, phi, theta );
+//   sun.setFromSphericalCoords( 1, phi, theta );
 
-  sky.material.uniforms[ 'sunPosition' ].value.copy( sun );
-  water.material.uniforms[ 'sunDirection' ].value.copy( sun ).normalize();
+//   sky.material.uniforms[ 'sunPosition' ].value.copy( sun );
+//   water.material.uniforms[ 'sunDirection' ].value.copy( sun ).normalize();
 
-  scene.environment = pmremGenerator.fromScene( sky ).texture;
+//   scene.environment = pmremGenerator.fromScene( sky ).texture;
 
-}
+// }
 
-updateSun();
+// updateSun();
 
 // const pmremGenerator = new THREE.PMREMGenerator( renderer );
 
@@ -153,15 +153,17 @@ function initDraw() {
       model.castShadow = true
       const deep = (arr) => {
         arr.forEach(i => {
-          // if ([i.name].includes('shadow_'))
-          i.castShadow = true
-          if (i.children.length) {
-            deep(i.children)
-          }
+          // console.log('name', i.name, (i.name).includes('shadow'))
+          // if ((i.name).includes('shadow')) { 
+            i.castShadow = true
+            if (i.children.length) {
+              deep(i.children)
+            }
+          // }
         })
       }
       deep(model.children)
-      model.position.set( 0, .3, 0 )
+      // model.position.set( 0, .3, 0 )
       model.scale.set(0.04, 0.04, 0.04);
       scene.add(model);
       renderer.render(scene, camera);
@@ -177,7 +179,7 @@ function initDraw() {
 function animate() {
   // controls.update();
   renderer.render(scene, camera);
-  water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
+  // water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
 
   requestAnimationFrame(animate);
 }

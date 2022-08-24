@@ -9,6 +9,7 @@ import useGameHandle from '@/hooks/useGameHandle'
 
 const orientation = getQueryParam('orientation')
 const roomId = getQueryParam('roomId')
+console.log('roomId', roomId)
 
 // 返回大厅
 const goBack = (data) => {
@@ -21,7 +22,7 @@ const goBack = (data) => {
   }, 1000)
 }
 
-const { SudSDk } = useGameDetail('1472142640866779138', roomId || '1472142640866779138', goBack)
+const { SudSDk } = useGameDetail('1560457002684354561', roomId, goBack)
 
 const { joinGame, quitGame, readyGame, cancelReadyGame, startGame } = useGameHandle(SudSDk)
 

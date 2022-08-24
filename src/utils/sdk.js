@@ -1,7 +1,11 @@
 import { GameConfigModel, SudFSMMGDecorator, SudFSTAPPDecorator, SudFSMMGListener } from 'sudmgp-sdk-js-wrapper'
 import { SudMGP } from 'sudmgp-sdk-js'
 import { getCode } from '@/api/login' // 短期令牌code接口
+import { useUserStore } from '@/store/index.js'
+
 const SudMGPSDK = SudMGP
+
+const userStore = useUserStore()
 
 export class SDKGameView {
   gameRoomId // 游戏房间id，房间隔离，同一房间才能一起游戏
@@ -9,7 +13,7 @@ export class SDKGameView {
   gameId // 游戏id
 
   /** 使用的UserId。这里随机生成作演示，开发者将其修改为业务使用的唯一userId */
-  userId = '100668' // Math.floor((Math.random() + 1) * 10000).toString()
+  userId = userStore.id // Math.floor((Math.random() + 1) * 10000).toString()
   /** Sud平台申请的appId */
   // eslint-disable-next-line camelcase
   SudMGP_APP_ID = '1560457002684354561' // "1498868666956988417"

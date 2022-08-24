@@ -1,15 +1,19 @@
 import { SDKGameView } from "../utils/sdk"
 import { ref, onMounted, reactive } from "vue";
 import useStateHandle from "@/hooks/useStateHandle";
+import { useUserStore } from '@/store/index.js'
 
-export const useGameDetail = (gameId = '1472142640866779138', roomId, goBack) => {
-  console.log('32131231', gameId, roomId)
+
+export const useGameDetail = (gameId = '1560457002684354561', roomId, goBack) => {
+  // console.log('32131231', gameId, roomId)
   const [SudSDk, setSudSDk] = useStateHandle()
+  const store = useUserStore()
   // 页面挂载后进行sdk初始化
   onMounted(() => {
     // 要挂载的元素
     const root = document.getElementById('game')
-    const userId = Math.floor((Math.random() + 1) * 10000).toString()
+    const userId = store.id
+
     if (root) {
       const nsdk = new SDKGameView({ root, gameRoomId: roomId, gameId, userId })
       console.log(nsdk)
@@ -34,7 +38,7 @@ export const useGameDetail = (gameId = '1472142640866779138', roomId, goBack) =>
       //   console.log(stage, retCode, progress, '自定义进度')
       // }
       setSudSDk(nsdk)
-      console.log(userId)
+      // console.log(userId)
       nsdk.login(userId)
     }
   })
