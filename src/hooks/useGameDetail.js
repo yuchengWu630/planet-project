@@ -4,8 +4,7 @@ import useStateHandle from "@/hooks/useStateHandle";
 import { useUserStore } from '@/store/index.js'
 
 
-export const useGameDetail = (gameId = '1560457002684354561', roomId, goBack) => {
-  // console.log('32131231', gameId, roomId)
+export const useGameDetail = (gameId, roomId, goBack) => {
   const [SudSDk, setSudSDk] = useStateHandle()
   const store = useUserStore()
   // 页面挂载后进行sdk初始化
@@ -16,14 +15,12 @@ export const useGameDetail = (gameId = '1560457002684354561', roomId, goBack) =>
 
     if (root) {
       const nsdk = new SDKGameView({ root, gameRoomId: roomId, gameId, userId })
-      console.log(nsdk)
       nsdk.setSudFSMMGListener({
         onGameStarted() {
           console.log('========自定义的game start=====')
         },
         onGameMGCommonGameBackLobby(handle, data) {
           // 返回游戏大厅
-          console.log('onGameMGCommonGameBackLobby', data)
 
           goBack && goBack(data)
         }

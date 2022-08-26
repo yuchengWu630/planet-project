@@ -1,6 +1,6 @@
 import { GameConfigModel, SudFSMMGDecorator, SudFSTAPPDecorator, SudFSMMGListener } from 'sudmgp-sdk-js-wrapper'
 import { SudMGP } from 'sudmgp-sdk-js'
-import { getCode } from '@/api/login' // 短期令牌code接口
+import { getCode, getSceneCode } from '@/api/login' // 短期令牌code接口
 import { useUserStore } from '@/store/index.js'
 
 const SudMGPSDK = SudMGP
@@ -42,7 +42,7 @@ export class SDKGameView {
 
   /** 第1步 登录  */
   login (userId) {
-    console.log(this.userId, this.code, this.SudMGP_APP_ID, this.SudMGP_APP_KEY, this.GAME_IS_TEST_ENV)
+    console.log('111', this.userId, this.code, this.SudMGP_APP_ID, this.SudMGP_APP_KEY, this.GAME_IS_TEST_ENV)
     return new Promise(() => {
       const data = {
         user_id: userId || this.userId,
@@ -51,6 +51,7 @@ export class SDKGameView {
       // 获取code
       getCode(data).then(async (res) => {
         const code = res.data.code
+        console.log('code', code)
         await this.beforeInitSdk && this.beforeInitSdk(SudMGP)
         this.initSdk({
           userId: userId,
@@ -161,7 +162,7 @@ export class SDKGameView {
     console.log(userId, gameRoomId, code, gameId, language, this.sudFSMMGDecorator)
 
     // 调用游戏sdk加载游戏
-    const iSudFSTAPP = SudMGPSDK.loadMG(userId, gameRoomId, code, gameId, language, this.sudFSMMGDecorator, this.root)
+    const iSudFSTAPP = SudMGPSDK.loadMG(userId, 2, code, gameId, language, this.sudFSMMGDecorator, this.root)
     // APP调用游戏接口的装饰类设置
     if (iSudFSTAPP) {
       this.sudFSTAPPDecorator.setISudFSTAPP(iSudFSTAPP)

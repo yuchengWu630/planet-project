@@ -50,7 +50,7 @@ export default defineConfig({
   },
   base: './',
   server: {
-    port: 80,
+    port: 3000,
     open: true,
     cors: true,
     proxy: {

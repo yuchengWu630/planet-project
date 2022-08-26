@@ -1,5 +1,8 @@
 <template>
-  <div id="planetCanvas"></div>
+  <div>
+    <pro v-show="showCanvas" :progress="progress"></pro>
+    <div id="planetCanvas"></div>
+  </div>
 </template>
 
 <script setup>
@@ -23,6 +26,8 @@ const { VITE_MODEL_URL } = import.meta.env
 const loader = new GLTFLoader();
 const sun = new THREE.Vector3();
 let camera
+let showCanvas = ref(true);
+let progress = ref(0);
 
 
 let directionLight=new THREE.DirectionalLight(
@@ -44,7 +49,7 @@ var geometry = new THREE.PlaneBufferGeometry( 300, 300 );
 // 创建网格对象 物体 材质
 var mesh = new THREE.Mesh( geometry, material );
 // 设置网格对象的位置
-mesh.position.set( 0, 0, 0 );
+mesh.position.set( 0, .2, 0 );
 // 沿着X轴旋转
 mesh.rotation.x = - Math.PI * 0.5;
 // 接受阴影
@@ -116,7 +121,7 @@ scene.environment = pmremGenerator.fromScene(
   new RoomEnvironment(),
   0.04
 ).texture;
-camera.position.set(10.6, 2, -0.1);
+camera.position.set(.1, 2, -11);
 const controls = new OrbitControls(camera, renderer.domElement);
 // controls.touches = {
 // 	ONE: THREE.TOUCH.ROTATE,
@@ -130,11 +135,25 @@ const controls = new OrbitControls(camera, renderer.domElement);
 //   );
 // };
 // controls.update();
-// controls.enablePan = false;
-// controls.enableDamping = true;
-// controls.maxDistance = 30;
-// controls.minDistance = 6;
-// controls.maxPolarAngle = 1.56;
+controls.enablePan = false;
+controls.enableDamping = true;
+controls.maxDistance = 16;
+controls.minDistance = 4;
+controls.maxPolarAngle = 1.56;
+console.log(`${VITE_MODEL_URL}`)
+dracoLoader.setDecoderPath(`${VITE_MODEL_URL}/libs/`);
+new THREE.CubeTextureLoader().load([
+  `${VITE_MODEL_URL}/libs/px.jpg`,
+  `${VITE_MODEL_URL}/libs/nx.jpg`,
+  `${VITE_MODEL_URL}/libs/py.jpg`,
+  `${VITE_MODEL_URL}/libs/ny.jpg`,
+  `${VITE_MODEL_URL}/libs/pz.jpg`,
+  `${VITE_MODEL_URL}/libs/nz.jpg`
+], function (cubeTexture) {
+  // cubeTexture.encoding = THREE.sRGBEncoding;
+  scene.background = cubeTexture;
+});
+loader.setDRACOLoader(dracoLoader);
 
 function initDraw() {
   // document.getElementById('app').style.width = document.documentElement.clientWidth
@@ -166,14 +185,24 @@ function initDraw() {
       // model.position.set( 0, .3, 0 )
       model.scale.set(0.04, 0.04, 0.04);
       scene.add(model);
+      showCanvas.value = false;
       renderer.render(scene, camera);
       animate();
     },
-    ()=>{},
+    onProgress,
     function (e) {
       console.error(e);
     }
   );
+}
+
+function matchPercentage(data) {
+  let result = (data * 100).toFixed(0);
+  return result;
+}
+
+function onProgress(xhr) {
+  progress.value = matchPercentage(xhr.loaded / xhr.total);
 }
 
 function animate() {

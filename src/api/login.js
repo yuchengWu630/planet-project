@@ -1,9 +1,18 @@
 import request from '@/utils/axios'
 
-// 游戏列表
+// 获取换装code
 export const getCode = (data) => {
   return request({
-    url: `https://mgp-hello.sudden.ltd/login/v3`,
+    url: 'api/bz/sud/login',
+    method: 'post',
+    data
+  })
+}
+
+// 获取场景code
+export const getSceneCode  = (data) => {
+  return request({
+    url: '/api/bz/scene/get_sstoken',
     method: 'post',
     data
   })

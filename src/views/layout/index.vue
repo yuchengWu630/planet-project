@@ -59,7 +59,13 @@ const vHorizontalScreen = {
 
 <style>
 #horizontal {
-  background-color: rgb(9, 2, 77);
+  background-color: #fff;
+}
+.container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 /*  .container {
   width: 100vw;

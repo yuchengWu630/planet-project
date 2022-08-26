@@ -37,8 +37,8 @@ export default {
       loading: false,
       formData: {
         type: 1,
-        phone: '',
-        code: '',
+        phone: '13265409630',
+        code: '0000',
       },
     }
   },
