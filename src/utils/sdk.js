@@ -162,7 +162,7 @@ export class SDKGameView {
     console.log(userId, gameRoomId, code, gameId, language, this.sudFSMMGDecorator)
 
     // 调用游戏sdk加载游戏
-    const iSudFSTAPP = SudMGPSDK.loadMG(userId, 2, code, gameId, language, this.sudFSMMGDecorator, this.root)
+    const iSudFSTAPP = SudMGPSDK.loadMG(userId, '2', code, gameId, language, this.sudFSMMGDecorator, this.root)
     // APP调用游戏接口的装饰类设置
     if (iSudFSTAPP) {
       this.sudFSTAPPDecorator.setISudFSTAPP(iSudFSTAPP)

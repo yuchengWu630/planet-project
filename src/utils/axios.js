@@ -3,7 +3,7 @@ import { Notify } from 'vant'
 const axios = Axios.create({
   baseURL: '/',
   withCredentials: true,
-  timeout: 30000,
+  // timeout: 30000,
 })
 axios.interceptors.request.use(
   config => {
