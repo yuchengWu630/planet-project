@@ -7,10 +7,8 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    Hia: typeof import('./src/components/hia/index.vue')['default']
     His: typeof import('./src/components/his/index.vue')['default']
     Pro: typeof import('./src/components/pro/index.vue')['default']
-    Progress: typeof import('./src/components/progress/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ValidateForm: typeof import('./src/components/validateForm/index.vue')['default']
