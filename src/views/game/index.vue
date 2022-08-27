@@ -36,5 +36,6 @@ const { joinGame, quitGame, readyGame, cancelReadyGame, startGame } = useGameHan
   display flex
   justify-content center
   height 100%
+  width 100%
   align-items center
 </style>

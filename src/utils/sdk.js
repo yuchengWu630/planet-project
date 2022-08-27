@@ -114,8 +114,10 @@ export class SDKGameView {
         console.log('=======sud h5 onGameLog======= ', dataJson)
       },
       onGetGameViewInfo: function (handle, dataJson) {
-        const width = self.root.clientWidth
-        const height = self.root.clientHeight
+        
+        const width = document.getElementById('horizontal').clientWidth
+        const height = document.getElementById('horizontal').clientHeight
+        debugger
         console.log(width, height, 'width,height', dataJson, 'dataJson')
         const data = JSON.parse(dataJson)
         const dpr = data.ratio || 1
