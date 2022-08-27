@@ -11,13 +11,11 @@ axios.interceptors.request.use(
     const userInfo = localStorage.userInfo
       ? JSON.parse(localStorage.userInfo)
       : {}
-    console.log(localStorage.userInfo)
     if (userInfo.key) {
       config.headers = {
         token: userInfo.key,
       }
     }
-    console.log('key:', userInfo.key)
     return config
   },
   error => {

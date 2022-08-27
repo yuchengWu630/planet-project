@@ -109,6 +109,7 @@ export default {
           this.$router.push('./bind')
           return
         }
+        this.$router.push('./game')
       } catch (err) {
         console.error(err)
       }

@@ -64,7 +64,7 @@ export default {
         await this.$refs.validateForm.validate()
         this.loading = true
         const params = JSON.parse(JSON.stringify(this.formData))
-        const { data } = this.bind(params)
+        const { data } = await this.bind(params)
         const userStore = useUserStore()
         userStore.setUserInfo(data)
         this.$notify({ type: 'success', message: '绑定成功' })
