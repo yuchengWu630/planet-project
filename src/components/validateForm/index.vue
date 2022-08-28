@@ -1,5 +1,5 @@
 <template>
-  <van-form ref="form">
+  <van-form ref="form" class="validate-form" :style="formStyles">
     <van-cell-group inset>
       <van-field
         :modelValue="phone"
@@ -85,13 +85,17 @@ export default {
       return this[activeKey]
     },
   },
+  watch: {
+    showKeybord(val) {
+      this.$emit('on-keyboard-show', val)
+    },
+  },
   methods: {
     onInput(val) {
       const updateVal = this[this.activeKey] + val
       this.$emit(`update:${this.activeKey}`, updateVal)
     },
     onDelete() {
-      console.log('delete')
       const updateVal = this[this.activeKey].slice(0, -1)
       this.$emit(`update:${this.activeKey}`, updateVal)
     },
@@ -144,7 +148,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .login {
   display: flex;
   flex-direction: column;
@@ -156,7 +160,28 @@ export default {
   text-align: center;
   font-size: 20px;
 }
+.validate-form {
+  border: 1px solid #eee;
+  margin: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
 .van-cell {
-  padding: 40px var(--van-cell-horizontal-padding);
+  padding: 32px var(--van-cell-horizontal-padding);
+}
+.login .van-number-keyboard {
+  bottom: auto;
+  left: auto;
+  right: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+}
+.login .van-number-keyboard .van-number-keyboard__header {
+  height: 100px;
+}
+.login .van-number-keyboard .van-key {
+  height: 100px;
 }
 </style>
