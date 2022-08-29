@@ -1,5 +1,6 @@
 import Axios from 'axios'
 import { Notify } from 'vant'
+import { useUserStore } from '@/store/index.js'
 const axios = Axios.create({
   baseURL: '/',
   withCredentials: true,
@@ -7,10 +8,7 @@ const axios = Axios.create({
 })
 axios.interceptors.request.use(
   config => {
-    // 请求拦截
-    const userInfo = localStorage.userInfo
-      ? JSON.parse(localStorage.userInfo)
-      : {}
+    const userInfo = useUserStore()
     if (userInfo.key) {
       config.headers = {
         token: userInfo.key,
