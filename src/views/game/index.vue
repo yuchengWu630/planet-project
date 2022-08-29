@@ -78,16 +78,17 @@ function loadGame(gameId = '1560939199401668609', roomId = store.roomId, goBack,
             break
           case 'mg_avatar_get_avatar':
             console.log('===========mg_avatar_get_avatar=============', store.avatar)
-            handle.success(store.avatar)
+            handle.success(JSON.stringify({"gender": "FeMale", "avatar": "Role_FeMale_T19_Hair_01_M_Face_01_T_T19_UB_01_M_T19_LB_01_M_T19_Shoe_01_M"}))
             break
           case 'mg_avatar_modify_avatar':
-            console.log('===========mg_avatar_modify_avatar=============', data.avatar)
+            console.log('===========mg_avatar_modify_avatar=============', data, store.avatar)
             // console.log(userStore.key)
             let param = new FormData()
-            param.append('avatar', `{"gender": "Male", "avatar": "${data.avatar}"}`)
+            // param.append('avatar', `{"gender": "FeMale", "avatar": "${data.avatar}"}`)
+            param.append('avatar', store.avatar)
             // param.append('gender', 'Male')
             saveUserAvatar(param).then((res) => {
-              goScenes && goScenes(data)
+              // goScenes && goScenes(data)
               console.log('==============saveUserAvatar==========', res)
             })
             break
