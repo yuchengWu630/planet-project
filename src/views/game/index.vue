@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="female">
-        <div class="select-item" @click="handleSexSelect('Female')">
+        <div class="select-item" @click="handleSexSelect('FeMale')">
           <div>女</div>
         </div>
       </div>
