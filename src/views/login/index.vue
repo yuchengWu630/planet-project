@@ -39,8 +39,8 @@ export default {
       showKeyboard: false,
       formData: {
         type: 1,
-        phone: '',
-        code: '',
+        phone: '15013810630',
+        code: '0000',
       },
     }
   },

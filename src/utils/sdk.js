@@ -6,7 +6,6 @@ import { useUserStore } from '@/store/index.js'
 const SudMGPSDK = SudMGP
 
 const userStore = useUserStore()
-
 export class SDKGameView {
   gameRoomId // 游戏房间id，房间隔离，同一房间才能一起游戏
   language = "zh-CN" /** 游戏的语言代码 */
@@ -117,14 +116,15 @@ export class SDKGameView {
             console.log('handle mg_common_click_user_profile')
             break
           case 'mg_avatar_get_avatar':
-            console.log('===========mg_avatar_get_avatar=============', data)
-            handle.success(JSON.stringify({gender: 'Male', avatar: 'Role_Male_T19_Hair_01_M_Face_01_T_T19_UB_01_M_T19_LB_01_M_T19_Shoe_01_M'}))
+            console.log('===========mg_avatar_get_avatar=============', userStore.avatar)
+            handle.success(userStore.avatar)
             break
           case 'mg_avatar_modify_avatar':
             console.log('===========mg_avatar_modify_avatar=============', data.avatar)
             // console.log(userStore.key)
             let param = new FormData()
-            param.append('avatar', data.avatar)
+            param.append('avatar', `{"gender": "Male", "avatar": "${data.avatar}"}`)
+            // param.append('gender', 'Male')
             saveUserAvatar(param).then((res) => {
               console.log('==============saveUserAvatar==========', res)
             })
