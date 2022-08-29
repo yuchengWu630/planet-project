@@ -1,5 +1,5 @@
 <template>
-  <section id="horizontal">
+  <section id="horizontal" v-horizontal-screen>
     <div class="container">
       <slot></slot>
     </div>

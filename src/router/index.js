@@ -48,9 +48,17 @@ const routes = [
     path: '/game',
     name: 'Game',
     meta: {
-      title: '展馆',
+      title: '个人中心',
     },
     component: views['game'],
+  },
+  {
+    path: '/scenes',
+    name: 'Scenes',
+    meta: {
+      title: '展馆',
+    },
+    component: views['scenes'],
   },
 ]
 

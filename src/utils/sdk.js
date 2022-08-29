@@ -1,6 +1,6 @@
 import { GameConfigModel, SudFSMMGDecorator, SudFSTAPPDecorator, SudFSMMGListener } from 'sudmgp-sdk-js-wrapper'
 import { SudMGP } from 'sudmgp-sdk-js'
-import { getCode, getSceneCode } from '@/api/login' // 短期令牌code接口
+import { getCode, saveUserAvatar } from '@/api/login' // 短期令牌code接口
 import { useUserStore } from '@/store/index.js'
 
 const SudMGPSDK = SudMGP
@@ -110,6 +110,28 @@ export class SDKGameView {
         // 自定义实现页面跳转或者回到大厅的操作
 
       },
+      onGameCustomerStateChange(handle, state, data) {
+        // console.log('===========onGameCustomerStateChange=============', state)
+        switch (state) {
+          case 'mg_common_click_user_profile': 
+            console.log('handle mg_common_click_user_profile')
+            break
+          case 'mg_avatar_get_avatar':
+            console.log('===========mg_avatar_get_avatar=============', data)
+            handle.success(JSON.stringify({gender: 'Male', avatar: 'Role_Male_T19_Hair_01_M_Face_01_T_T19_UB_01_M_T19_LB_01_M_T19_Shoe_01_M'}))
+            break
+          case 'mg_avatar_modify_avatar':
+            console.log('===========mg_avatar_modify_avatar=============', data.avatar)
+            // console.log(userStore.key)
+            let param = new FormData()
+            param.append('avatar', data.avatar)
+            saveUserAvatar(param).then((res) => {
+              console.log('==============saveUserAvatar==========', res)
+            })
+            break
+            
+        }
+      },
       onGameLog(dataJson) {
         console.log('=======sud h5 onGameLog======= ', dataJson)
       },
@@ -117,7 +139,6 @@ export class SDKGameView {
         
         const width = document.getElementById('horizontal').clientWidth
         const height = document.getElementById('horizontal').clientHeight
-        debugger
         console.log(width, height, 'width,height', dataJson, 'dataJson')
         const data = JSON.parse(dataJson)
         const dpr = data.ratio || 1

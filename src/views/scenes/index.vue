@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-// 换装页面
+// 场景页面
 import { useGameDetail } from '@/hooks/useGameDetail'
 import { getQueryParam } from '@/utils/utils'
 import useGameHandle from '@/hooks/useGameHandle'
@@ -23,7 +23,7 @@ const goBack = (data) => {
   }, 1000)
 }
 
-const { SudSDk } = useGameDetail('1560939199401668609', roomId, goBack)
+const { SudSDk } = useGameDetail('1556909306879725569', roomId, goBack)
 
 const { joinGame, quitGame, readyGame, cancelReadyGame, startGame } = useGameHandle(SudSDk)
 

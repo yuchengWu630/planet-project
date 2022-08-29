@@ -9,10 +9,10 @@ export const getCode = (data) => {
   })
 }
 
-// 获取场景code
-export const getSceneCode  = (data) => {
+// 保存用户装扮选择信息
+export const saveUserAvatar  = (data) => {
   return request({
-    url: '/api/bz/scene/get_sstoken',
+    url: '/api/bz/user/avatar/update',
     method: 'post',
     data
   })
