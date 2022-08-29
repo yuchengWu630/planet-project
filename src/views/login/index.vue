@@ -1,16 +1,17 @@
 <template>
-  <div class="login">
+  <div class="login" :style="pageStyles">
     <h3 class="login-header">009星通行证</h3>
     <validate-form
       ref="validateForm"
       v-model:phone="formData.phone"
       v-model:code="formData.code"
+      @on-keyboard-show="onKeyboardShow"
     />
     <p class="tips">
       没有账号？
       <router-link to="/register">去注册</router-link>
     </p>
-    <div style="margin: 16px">
+    <div style="margin: 0 16px 16px">
       <van-button
         style="margin-bottom: 16px"
         :loading="loading"
@@ -35,10 +36,11 @@ export default {
   data() {
     return {
       loading: false,
+      showKeyboard: false,
       formData: {
         type: 1,
-        phone: '13265409630',
-        code: '0000',
+        phone: '',
+        code: '',
       },
     }
   },
@@ -48,7 +50,19 @@ export default {
       this.getUserInfoByWechat(code)
     }
   },
+  computed: {
+    pageStyles({ showKeyboard }) {
+      return {
+        width: showKeyboard ? '50%' : 'auto',
+      }
+    },
+  },
   methods: {
+    onKeyboardShow(val) {
+      this.showKeyboard = val
+      const container = document.querySelector('.container')
+      container.style.justifyContent = val ? 'flex-start' : 'center'
+    },
     login(params) {
       return request({
         url: 'api/bz/user/phone/login',
@@ -124,25 +138,21 @@ export default {
   flex-direction: column;
 }
 .login-header {
-  height: 64px;
-  line-height: 108px;
-  color: #fff;
+  height: 48px;
+  line-height: 48px;
+  color: #333;
   text-align: center;
   font-size: 20px;
 }
 .tips {
-  padding: 0 16px;
-  height: 32px;
-  line-height: 32px;
-  color: #fff;
+  margin: 0 16px 16px;
+  height: 20px;
+  line-height: 20px;
+  color: #666;
   text-align: right;
   font-size: 12px;
 }
 .tips a {
   color: var(--van-primary-color);
-}
-
-.van-cell {
-  padding: 40px var(--van-cell-horizontal-padding);
 }
 </style>
