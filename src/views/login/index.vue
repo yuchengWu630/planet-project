@@ -78,6 +78,7 @@ export default {
         const { data } = await this.login(params)
         this.$notify({ type: 'success', message: '登录成功' })
         const userStore = useUserStore()
+        console.log(data, '=============================== data =======================')
         userStore.setUserInfo(data)
         this.$router.push('./game')
       } catch (err) {

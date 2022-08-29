@@ -1,6 +1,6 @@
 import { GameConfigModel, SudFSMMGDecorator, SudFSTAPPDecorator, SudFSMMGListener } from 'sudmgp-sdk-js-wrapper'
 import { SudMGP } from 'sudmgp-sdk-js'
-import { getCode, saveUserAvatar } from '@/api/login' // 短期令牌code接口
+import { getCode } from '@/api/login' // 短期令牌code接口
 import { useUserStore } from '@/store/index.js'
 
 const SudMGPSDK = SudMGP
@@ -115,21 +115,6 @@ export class SDKGameView {
           case 'mg_common_click_user_profile': 
             console.log('handle mg_common_click_user_profile')
             break
-          case 'mg_avatar_get_avatar':
-            console.log('===========mg_avatar_get_avatar=============', userStore.avatar)
-            handle.success(userStore.avatar)
-            break
-          case 'mg_avatar_modify_avatar':
-            console.log('===========mg_avatar_modify_avatar=============', data.avatar)
-            // console.log(userStore.key)
-            let param = new FormData()
-            param.append('avatar', `{"gender": "Male", "avatar": "${data.avatar}"}`)
-            // param.append('gender', 'Male')
-            saveUserAvatar(param).then((res) => {
-              console.log('==============saveUserAvatar==========', res)
-            })
-            break
-            
         }
       },
       onGameLog(dataJson) {

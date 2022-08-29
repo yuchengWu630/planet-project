@@ -23,6 +23,7 @@ import { ref, watch, onMounted } from "vue";
 import { SDKGameView } from "@/utils/sdk";
 import useStateHandle from "@/hooks/useStateHandle";
 import useGameHandle from "@/hooks/useGameHandle";
+import { saveUserAvatar } from '@/api/login' // 短期令牌code接口
 import { useUserStore } from "@/store/index.js";
 
 const [SudSDk, setSudSDk] = useStateHandle();
@@ -31,7 +32,10 @@ const showSelect = ref(false);
 const game = {
   gameId: '1560939199401668609',
   roomId: store.roomId,
+  userId: store.id,
+  code: store.key
 }
+console.log(game, '===============================store.id=======================')
 
 onMounted(() => {
   if (store.avatar) {
@@ -40,14 +44,14 @@ onMounted(() => {
       gender: avatar.gender,
       avatar: avatar.avatar,
     });
-    loadGame(game.gameId, game.roomId, goBack);
+    loadGame(game.gameId, game.roomId, goBack, goScenes);
   } else {
     showSelect.value = true;
     return
   }
 });
 
-function loadGame(gameId = '1560939199401668609', roomId = store.roomId, goBack) {
+function loadGame(gameId = '1560939199401668609', roomId = store.roomId, goBack, goScenes) {
   // 要挂载的元素
   const root = document.getElementById("game");
   const userId = store.id;
@@ -65,9 +69,30 @@ function loadGame(gameId = '1560939199401668609', roomId = store.roomId, goBack)
       },
       onGameMGCommonGameBackLobby(handle, data) {
         // 返回游戏大厅
-
         goBack && goBack(data);
       },
+      onGameCustomerStateChange(handle, state, data) {
+        switch (state) {
+          case 'mg_common_click_user_profile': 
+            console.log('handle mg_common_click_user_profile')
+            break
+          case 'mg_avatar_get_avatar':
+            console.log('===========mg_avatar_get_avatar=============', store.avatar)
+            handle.success(store.avatar)
+            break
+          case 'mg_avatar_modify_avatar':
+            console.log('===========mg_avatar_modify_avatar=============', data.avatar)
+            // console.log(userStore.key)
+            let param = new FormData()
+            param.append('avatar', `{"gender": "Male", "avatar": "${data.avatar}"}`)
+            // param.append('gender', 'Male')
+            saveUserAvatar(param).then((res) => {
+              goScenes && goScenes(data)
+              console.log('==============saveUserAvatar==========', res)
+            })
+            break
+        }
+      }
     });
     // 自定义loading
     // nsdk.beforeInitSdk = function (SudMGP) {
@@ -99,7 +124,7 @@ const handleSexSelect = (param) => {
     });
   }
   showSelect.value = false;
-  loadGame(game.gameId, game.roomId, goBack);
+  loadGame(game.gameId, game.roomId, goBack, goScenes);
 };
 
 const goBack = (data) => {
@@ -109,6 +134,16 @@ const goBack = (data) => {
   }
   setTimeout(() => {
     location.href = "/home";
+  }, 1000);
+};
+
+const goScenes = (data) => {
+  if (data && data.leaveGame) {
+    // 销毁游戏
+    SudSDk && SudSDk.onDestroy();
+  }
+  setTimeout(() => {
+    location.href = "/scenes";
   }, 1000);
 };
 

@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', {
     phone: '',
     rname: '',
     uname: '',
+    roomId: '',
     openId: null,
   }),
   actions: {
@@ -20,6 +21,7 @@ export const useUserStore = defineStore('user', {
       this.phone = data.phone || ''
       this.rname = data.rname || ''
       this.uname = data.uname || ''
+      this.roomId = data.roomId || ''
       this.openId = data.openId || null
       localStorage.userInfo = JSON.stringify(data)
     },
