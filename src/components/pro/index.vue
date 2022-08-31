@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="progress-box">
     <div class="progress">
       <div class="progress-wrapper">
         <div class="back fill">
@@ -35,7 +35,7 @@ const { progress } = toRefs(props);
 </script>
 
 <style>
-.box {
+.progress-box {
   position: absolute;
   top: 40%;
   left: 50%;

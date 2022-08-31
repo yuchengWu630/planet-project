@@ -185,9 +185,9 @@ function initDraw() {
       // model.position.set( 0, .3, 0 )
       model.scale.set(0.04, 0.04, 0.04);
       scene.add(model);
-      showCanvas.value = false;
-      renderer.render(scene, camera);
-      animate();
+      // showCanvas.value = false;
+      // renderer.render(scene, camera);
+      // animate();
     },
     onProgress,
     function (e) {
