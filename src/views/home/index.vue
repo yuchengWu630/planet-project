@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div style="background:#000">
+    <adv v-show="showCanvas" :showCanvas="showCanvas"></adv>
     <pro v-show="showCanvas" :progress="progress"></pro>
     <div id="planetCanvas"></div>
   </div>
@@ -35,7 +36,7 @@ let directionLight=new THREE.DirectionalLight(
     .7 // 光照的强度 默认1
 );
 // 平行光的位置
-directionLight.position.set( 15, 40, 35 );
+directionLight.position.set( 15, 40, 15 );
 // 如果设置为 true 该平行光会产生动态阴影。
 directionLight.castShadow = true;
 // 如果非零，那么光强度将会从最大值当前灯光位置处按照距离线性衰减到0。 缺省值为 0.0
@@ -49,7 +50,7 @@ var geometry = new THREE.PlaneBufferGeometry( 300, 300 );
 // 创建网格对象 物体 材质
 var mesh = new THREE.Mesh( geometry, material );
 // 设置网格对象的位置
-mesh.position.set( 0, .2, 0 );
+mesh.position.set( 0, -.9, 0 );
 // 沿着X轴旋转
 mesh.rotation.x = - Math.PI * 0.5;
 // 接受阴影
