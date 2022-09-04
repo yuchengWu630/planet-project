@@ -1,5 +1,8 @@
 <template>
-  <div id="game">game</div>
+  <div class="container">
+    <!-- <div class="chat-textarea"></div> -->
+    <div id="game">game</div>
+  </div>
 </template>
 
 <script setup>
@@ -132,11 +135,23 @@ const goScenes = data => {
 </script>
 
 <style lang="stylus">
-#game
-  font-size 32px
-  display flex
-  justify-content center
-  height 100%
-  width 100%
-  align-items center
+.container
+    position relative
+    width 100%
+    height 100%
+    .chat-textarea
+        position absolute
+        left 0
+        top 10px
+        width 100%
+        height 64px
+        background-color rgba(0, 0, 0, 0.5)
+        border 1px solid rgba(0, 0, 0, 0,3)
+    #game
+        font-size 32px
+        display flex
+        justify-content center
+        height 100%
+        width 100%
+        align-items center
 </style>
