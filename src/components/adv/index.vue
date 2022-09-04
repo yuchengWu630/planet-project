@@ -41,21 +41,22 @@ function getBackgroundNum () {
   width: 100%;
   height: 100%;
   position: absolute;
+  transition: 1s ease-out;
 }
 .adv-img-2 {
-  background:url('../../assets/adv/2.jpg') no-repeat fixed center;
+  background:url('../../assets/adv/2.jpg') no-repeat center;
   background-size: contain;
 }
 .adv-img-3 {
-  background:url('../../assets/adv/3.jpg') no-repeat fixed center;
+  background:url('../../assets/adv/3.jpg') no-repeat center;
   background-size: contain;
 }
 .adv-img-4 {
-  background:url('../../assets/adv/4.jpg') no-repeat fixed center;
+  background:url('../../assets/adv/4.jpg') no-repeat center;
   background-size: contain;
 }
 .adv-img-1 {
-  background:url('../../assets/adv/1.jpg') no-repeat fixed center;
+  background:url('../../assets/adv/1.jpg') no-repeat center;
   background-size: contain;
 }
 </style>

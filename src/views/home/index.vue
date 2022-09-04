@@ -29,6 +29,8 @@ const sun = new THREE.Vector3();
 let camera
 let showCanvas = ref(true);
 let progress = ref(0);
+let timeOut = null
+let renderEnabled
 
 
 let directionLight=new THREE.DirectionalLight(
@@ -58,63 +60,6 @@ mesh.receiveShadow = true;
 // 将网格对象添加到场景中
 scene.add( mesh );
 
-// 水材质
-// const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
-// const water = new Water(
-//   waterGeometry,
-//   {
-//     textureWidth: 512,
-//     textureHeight: 512,
-//     waterNormals: new THREE.TextureLoader().load( `${VITE_MODEL_URL}/libs/waternormals.jpg`, function ( texture ) {
-
-//       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-
-//     } ),
-//     sunDirection: new THREE.Vector3(),
-//     sunColor: 0xffffff,
-//     waterColor: 0x001e0f,
-//     distortionScale: 3.7,
-//     fog: scene.fog !== undefined
-//   }
-// );
-// water.rotation.x = - Math.PI / 2
-// water.position.set( 0, 0, 0 )
-// scene.add( water )
-
-// const sky = new Sky()
-// sky.scale.setScalar( 10000 )
-// scene.add( sky )
-
-// const skyUniforms = sky.material.uniforms
-
-// skyUniforms[ 'turbidity' ].value = 10
-// skyUniforms[ 'rayleigh' ].value = 2
-// skyUniforms[ 'mieCoefficient' ].value = 0.005
-// skyUniforms[ 'mieDirectionalG' ].value = 0.8
-
-// const parameters = {
-//   elevation: 0,
-//   azimuth: 250
-// }
-
-// function updateSun() {
-
-//   const phi = THREE.MathUtils.degToRad( 90 - parameters.elevation );
-//   const theta = THREE.MathUtils.degToRad( parameters.azimuth );
-
-//   sun.setFromSphericalCoords( 1, phi, theta );
-
-//   sky.material.uniforms[ 'sunPosition' ].value.copy( sun );
-//   water.material.uniforms[ 'sunDirection' ].value.copy( sun ).normalize();
-
-//   scene.environment = pmremGenerator.fromScene( sky ).texture;
-
-// }
-
-// updateSun();
-
-// const pmremGenerator = new THREE.PMREMGenerator( renderer );
-
 resizeCanvasRatio()
 
 renderer.outputEncoding = THREE.sRGBEncoding;
@@ -124,18 +69,6 @@ scene.environment = pmremGenerator.fromScene(
 ).texture;
 camera.position.set(.1, 2, -11);
 const controls = new OrbitControls(camera, renderer.domElement);
-// controls.touches = {
-// 	ONE: THREE.TOUCH.ROTATE,
-// 	TWO: THREE.TOUCH.DOLLY_PAN
-// }
-// console.log(THREE.TOUCH.ROTATE)
-// const updateCamera = function (object, elapsed) {
-//   camera.position.set(object.x, object.y, object.z);
-//   camera.lookAt(
-//     new THREE.Vector3(object.lookAtX, object.lookAtY, object.lookAtZ)
-//   );
-// };
-// controls.update();
 controls.enablePan = false;
 controls.enableDamping = true;
 controls.maxDistance = 16;
@@ -168,27 +101,27 @@ function initDraw() {
   loader.load(
     `${VITE_MODEL_URL}/libs/planet.glb`,
     function (gltf) {
-      const model = gltf.scene;
-      console.log(model)
-      model.castShadow = true
-      const deep = (arr) => {
-        arr.forEach(i => {
-          // console.log('name', i.name, (i.name).includes('shadow'))
-          // if ((i.name).includes('shadow')) { 
-            i.castShadow = true
-            if (i.children.length) {
-              deep(i.children)
-            }
-          // }
-        })
+      if (progress.value >= 100) {
+        const model = gltf.scene;
+        // console.log(model)
+        model.castShadow = true
+        const deep = (arr) => {
+          arr.forEach(i => {
+              i.castShadow = true
+              if (i.children.length) {
+                deep(i.children)
+              }
+          })
+        }
+        deep(model.children)
+        model.scale.set(0.04, 0.04, 0.04);
+        scene.add(model);
+        renderer.render(scene, camera);
+        showCanvas.value = false;
+        // const timer = setTimeout(() => {
+        animate();
+        // }, 3000)
       }
-      deep(model.children)
-      // model.position.set( 0, .3, 0 )
-      model.scale.set(0.04, 0.04, 0.04);
-      scene.add(model);
-      // showCanvas.value = false;
-      // renderer.render(scene, camera);
-      // animate();
     },
     onProgress,
     function (e) {
@@ -208,9 +141,9 @@ function onProgress(xhr) {
 
 function animate() {
   // controls.update();
-  renderer.render(scene, camera);
-  // water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
-
+  if (renderEnabled) {
+    renderer.render(scene, camera);
+  }
   requestAnimationFrame(animate);
 }
 
@@ -239,6 +172,23 @@ function resizeCanvasRatio() {
   }
 }
 
+controls.addEventListener('change', function(){
+  console.log('321321321312312=============32132132131213')
+    timeRender();
+});
+
+function timeRender() {
+	//设置为可渲染状态
+    renderEnabled = true;
+    //清除上次的延迟器
+    if (timeOut) {
+        clearTimeout(timeOut);
+    }
+ 
+    timeOut = setTimeout(function () {
+        renderEnabled = false;
+    }, 3000);
+}
 
 onMounted(() => {
   initDraw();
